@@ -1,12 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Start Work</title>
-</head>
-<body>
-  <h1>This is start work html</h1>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Start Work</title>
+  </head>
+  <body>
+    <h1>This is start work html</h1>
+    <p id="gps-location" />
+    <p id="date" />
+    <script>
+      let locationText = document.getElementById("gps-location");
+      let dateText = document.getElementById("date");
+
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          locationText.innerHTML = "Geolocation is not supported by this browser.";
+        }
+      }
+
+      function showPosition(position) {
+        locationText.innerHTML =
+          "Latitude: " +
+          position.coords.latitude +
+          "<br>Longitude: " +
+          position.coords.longitude;
+      }
+
+      function getCurrentTime() {
+        let date = new Date();
+        let currentDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+        let currentTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+
+        dateText.innerHTML = `Date: ${currentDate} <br>Time: ${currentTime}`
+      }
+
+      getLocation();
+      getCurrentTime();
+    </script>
+  </body>
 </html>
