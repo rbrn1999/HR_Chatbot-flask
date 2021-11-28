@@ -5,41 +5,86 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Start Work</title>
+    <style>
+      html, body {
+        margin: 0px;
+        padding: 0px;
+        height: 100%;
+        background-color: #d8d8d8;
+      }
+
+      #message-box {
+        margin: 5%;
+        background-color: white;
+        padding: 5%;
+        border: solid 1px #3d3d3d;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      img {
+        width: 50%;
+        height: 50%;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+        color: royalblue;
+      }
+    </style>
   </head>
   <body>
-    <h1>This is start work html</h1>
-    <p id="gps-location" />
-    <p id="date" />
+    <div id="message-box">
+      <img src="{{ image }}" />
+      <h1>Start Work</h1>
+      <p id="gps-location" />
+      <p id="date" />
+    </div>
     <script>
       let locationText = document.getElementById("gps-location");
       let dateText = document.getElementById("date");
+      var loadingLocation = false
+
+      function setLoadingLocation(value) {
+        loadingLocation = value;
+      }
 
       function getLocation() {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(showPosition);
+          setTimeout(setLoadingLocation(true), 3000);
         } else {
           locationText.innerHTML = "Geolocation is not supported by this browser.";
+          setLoadingLocation(false);
         }
       }
 
       function showPosition(position) {
-        locationText.innerHTML =
-          "Latitude: " +
-          position.coords.latitude +
-          "<br>Longitude: " +
-          position.coords.longitude;
+        locationText.innerHTML = `Latitude: ${position.coords.latitude} <br>Longitude: ${position.coords.longitude}`;
       }
 
       function getCurrentTime() {
         let date = new Date();
-        let currentDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+        let currentDate = `
+        ${date.getFullYear()}-
+        ${date.getMonth() + 1}-  
+        ${date.getDate()}`;
         let currentTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 
-        dateText.innerHTML = `Date: ${currentDate} <br>Time: ${currentTime}`
+        dateText.innerHTML = `Date: ${currentDate} <br>Time: ${currentTime}`;
       }
 
+      locationText.innerHTML = `Getting your location ...`;
+      dateText.innerHTML = `Loading...`;
+
       getLocation();
-      getCurrentTime();
+
+      if (loadingLocation === true) {
+        setInterval(getCurrentTime, 5000);
+      }
     </script>
   </body>
 </html>

@@ -1,14 +1,20 @@
+import os
 from flask import Flask, request, render_template
 
+image_folder = os.path.join('static', 'images')
+
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = image_folder
 
 @app.route("/start_work", methods=['GET'])
 def start_work():
-    return render_template('startWork.html')
+    image = os.path.join(app.config['UPLOAD_FOLDER'], 'start-work.png')
+    return render_template('startWork.html', image=image)
   
 @app.route("/end_work", methods=['GET'])
 def end_work():
-    return render_template('endWork.html')
+    image = os.path.join(app.config['UPLOAD_FOLDER'], 'end-work.png')
+    return render_template('endWork.html', image=image)
 
 @app.route("/leave_permission", methods=['GET'])
 def leave_permission():
