@@ -7,6 +7,33 @@
   <title>Personal Information</title>
 </head>
 <body>
-  <h1>This is a page for personal information</h1>
+  <h1 class="title"></h1>
+  <form action="" method="POST">
+    <label class="label">
+      <div class="field form-inline">
+        姓名：<input type="text" name="name" class="label" value="" required />
+      </div>
+      <div class="field">
+        Id：
+      </div>
+      <div class="field">
+        LineId：
+      </div>
+      <div class="field form-inline">
+        Email：<input type="text" class="label" name="email" value="" required />
+      </div>
+
+      <div class="field">
+        <label for="角色" class="label">角色：
+          <input type="radio" name="role" value="customer" />顧客
+          <input type="radio" name="role" value="manager" />管理者
+        </label>
+      </div>
+      <div class="field form-inline">
+        <button class="button is-link">儲存</button>
+        <a class="button is-link" href="" style="margin-left: 5%">取消</a>
+      </div>
+    </label>
+  </form>
 </body>
 </html>
