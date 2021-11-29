@@ -27,7 +27,7 @@ class FirestoreDAO:
         memberId = memberCollection.add(myMember)[1].id
         memberCollection.document(memberId).update({'id': memberId})
 
-        # create memberid in company
+        # create member in company
         self.__db.document(f"companies/{companyId}/members/{memberId}").set(None)
         return {
             "name": myMember['name'],

@@ -1,7 +1,7 @@
 import os
 from line_api import PushMessage
 from firestore_DAO import FirestoreDAO
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 
 image_folder = os.path.join('static', 'images')
 
@@ -20,7 +20,7 @@ def register():
     #     member["companyName"] = firestoreDAO.getCompanies({'companyId': config.companyId})[0]['name']
     #     publishThread = threading.Thread(target=publish_messages, args=({"member" : member},))
     #     publishThread.start()
-    # return jsonify(member)
+    return jsonify(member)
     
 # Start Work 
 @app.route("/start_work", methods=['GET'])

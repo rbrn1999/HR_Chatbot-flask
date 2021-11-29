@@ -1,118 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>End Work</title>
+{% extends "mobileLayout.html" %}
+{% block title %}End Work{% endblock %}
+{% block headContent %}
+{% endblock %}
+{% block bodyContent %}
+<style>
+  #message-box {
+    margin: 2%;
+    background-color: white;
+    padding: 5%;
+    border: solid 1px #3d3d3d;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 
-    <style>
-      html,
-      body {
-        margin: 0px;
-        padding: 0px;
-        height: 100%;
-        background-color: #d8d8d8;
-      }
+  img {
+    width: 50%;
+    height: 50%;
+  }
+  
+  h1 {
+    font-size: 1.6rem;
+    color: royalblue !important;
+  }
 
-      #message-box {
-        margin: 5%;
-        background-color: white;
-        padding: 5%;
-        border: solid 1px #3d3d3d;
-        border-radius: 5px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
+  #submit-button {
+    width: 50px;
+    height: 30px;
+    display: flex;
+    background-color: #3d3d3d;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+  }
 
-      img {
-        width: 50%;
-        height: 50%;
-      }
+  a {
+    color: #d8d8d8;
+    font-size: 12px;
+    text-decoration: none;
+  }
+</style>
+<div id="message-box">
+  <img src="{{ image }}" />
+  <h1>Start Work</h1>
+  <p id="gps-location" />
+  <p id="date" />
+  <div id="submit-button">
+    <a href="#">Submit</a>
+  </div>
+</div>
+<script>
+  let locationText = document.getElementById("gps-location");
+  let dateText = document.getElementById("date");
+  var loadingLocation = false
 
-      h1 {
-        font-size: 1.6rem;
-        color: royalblue;
-      }
+  function setLoadingLocation(value) {
+    loadingLocation = value;
+  }
 
-      #submit-button {
-        width: 50px;
-        height: 30px;
-        display: flex;
-        background-color: #3d3d3d;
-        align-items: center;
-        justify-content: center;
-        border-radius: 5px;
-        cursor: pointer;
-      }
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+      setTimeout(setLoadingLocation(true), 3000);
+    } else {
+      locationText.innerHTML = "Geolocation is not supported by this browser.";
+      setLoadingLocation(false);
+    }
+  }
 
-      a {
-        color: #d8d8d8;
-        font-size: 12px;
-        text-decoration: none;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message-box">
-      <img src="{{ image }}" />
-      <h1>End Work</h1>
-      <p id="gps-location" />
-      <p id="date" />
-      <div id="submit-button">
-        <a href="#">Submit</a>
-      </div>
-    </div>
-    <script>
-      let locationText = document.getElementById("gps-location");
-      let dateText = document.getElementById("date");
-      let buttonText = document.getElementById("close-button");
-      var loadingLocation = false;
+  function showPosition(position) {
+    locationText.innerHTML = `Latitude: ${position.coords.latitude} <br>Longitude: ${position.coords.longitude}`;
+  }
 
-      function setLoadingLocation(value) {
-        loadingLocation = value;
-      }
+  function getCurrentTime() {
+    let date = new Date();
+    let currentDate = `
+    ${date.getFullYear()}-
+    ${date.getMonth() + 1}-  
+    ${date.getDate()}`;
+    let currentTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 
-      function getLocation() {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(showPosition);
-          setTimeout(setLoadingLocation(true), 3000);
-        } else {
-          locationText.innerHTML =
-            "Geolocation is not supported by this browser.";
-          setLoadingLocation(false);
-        }
-      }
+    dateText.innerHTML = `Date: ${currentDate} <br>Time: ${currentTime}`;
+  }
 
-      function showPosition(position) {
-        locationText.innerHTML = `Latitude: ${position.coords.latitude} <br>Longitude: ${position.coords.longitude}`;
-      }
+  function init() {
+    locationText.innerHTML = `Getting your location ...`;
+    dateText.innerHTML = `Loading...`;
 
-      function getCurrentTime() {
-        let date = new Date();
-        let currentDate = `
-      ${date.getFullYear()}-
-      ${date.getMonth() + 1}-  
-      ${date.getDate()}`;
-        let currentTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    getLocation();
 
-        dateText.innerHTML = `Date: ${currentDate} <br>Time: ${currentTime}`;
-      }
+    if (loadingLocation === true) {
+      setInterval(getCurrentTime, 5000);
+    }
+  }
 
-      function closeWindow() {
-        window.close();
-      }
-
-      locationText.innerHTML = `Getting your location ...`;
-      dateText.innerHTML = `Loading...`;
-
-      getLocation();
-
-      if (loadingLocation === true) {
-        setInterval(getCurrentTime, 1000);
-      }
-    </script>
-  </body>
-</html>
+  init()
+</script>
+{% endblock %}

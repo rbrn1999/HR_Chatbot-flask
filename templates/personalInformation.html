@@ -1,39 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Personal Information</title>
-</head>
-<body>
-  <h1 class="title"></h1>
+{% extends "mobileLayout.html" %}
+{% block title %}Personal Information{% endblock %}
+{% block headContent %}
+{% endblock %}
+{% block bodyContent %}
+<style>
+  #message-box {
+    margin: 2%;
+    background-color: white;
+    padding: 5%;
+    border: solid 1px #3d3d3d;
+    border-radius: 5px;
+  }
+
+  input[type=checkbox], input[type=radio] {
+    margin-right: 5px !important;
+  }
+
+  h1 {
+    margin: 5px 0px !important;
+    padding: 2%;
+  }
+
+</style>
+<h1 class="title">Personal Information</h1>
+<div id="message-box">
   <form action="" method="POST">
     <label class="label">
       <div class="field form-inline">
-        姓名：<input type="text" name="name" class="label" value="" required />
+        Name：<input type="text" name="name" class="label" value="" required />
+      </div>
+      <div class="field form-inline">
+        Email：<input type="email" name="email" class="label" value="" required />
       </div>
       <div class="field">
         Id：
       </div>
       <div class="field">
-        LineId：
-      </div>
-      <div class="field form-inline">
-        Email：<input type="text" class="label" name="email" value="" required />
-      </div>
-
-      <div class="field">
-        <label for="角色" class="label">角色：
-          <input type="radio" name="role" value="customer" />顧客
-          <input type="radio" name="role" value="manager" />管理者
+        <label for="角色" class="label">Role：
+          <input type="radio" name="role" value="customer" />Worker
+          <input type="radio" name="role" value="manager" />Manager
         </label>
       </div>
       <div class="field form-inline">
-        <button class="button is-link">儲存</button>
-        <a class="button is-link" href="" style="margin-left: 5%">取消</a>
+        <button class="button is-link">Save</button>
+        <a class="button is-link" href="" style="margin-left: 5%">Cancel</a>
       </div>
     </label>
   </form>
-</body>
-</html>
+</div>
+{% endblock %}

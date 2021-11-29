@@ -1,4 +1,53 @@
-<!DOCTYPE html>
+{% extends "mobileLayout.html" %}
+{% block title %}Leave Permission{% endblock %}
+{% block headContent %}
+{% endblock %}
+{% block bodyContent %}
+<style>
+  #message-box {
+    margin: 2%;
+    background-color: white;
+    padding: 5%;
+    border: solid 1px #3d3d3d;
+    border-radius: 5px;
+  }
+
+  h1 {
+    margin: 5px 0px !important;
+    padding: 2%;
+  }
+</style>
+<h1 class="title">Leave Permission</h1>
+<div id="message-box">
+  <form action="" method="POST">
+    <label class="label">
+      <div class="field form-inline">
+        Date：<input type="date" name="date" class="label" value="" required />
+      </div>
+      <div class="field form-inline">
+        Start Time：<input type="time" name="start-time" class="label" value="" required />
+      </div>
+      <div class="field form-inline">
+        End Time：<input type="time" name="end-time" class="label" value="" required />
+      </div>
+      <div class="field">
+        Total Time：
+      </div>
+      <div class="field">
+        Location：None
+      </div>
+      <div class="field form-inline">
+        <button class="button is-link">Save</button>
+        <a class="button is-link" href="" style="margin-left: 5%">Cancel</a>
+      </div>
+    </label>
+  </form>
+</div>
+{% endblock %}
+
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -15,4 +64,4 @@
     <p>End Time</p>
   </form>
 </body>
-</html>
+</html> -->
