@@ -1,26 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Company Information</title>
-</head>
-<body>
-  <h1>This is a page for Company Information</h1>
-  <form action="" method="POST">
-    <label class="label">
-      <div class="field form-inline">
-        Company name：<input type="text" name="name" class="label" value="" required />
-      </div>
-      <div class="field">
-        Id：
-      </div>
-      <div class="field form-inline">
-        <button class="button is-link">儲存</button>
-        <a class="button is-link" href="" style="margin-left: 5%">取消</a>
-      </div>
-    </label>
-  </form>
-</body>
-</html>
+{% extends "mobileLayout.html" %}
+{% block title %}Company Information{% endblock %}
+{% block headContent %}
+{% endblock %}
+{% block bodyContent %}
+<style>
+  #message-box {
+    margin: 2%;
+    background-color: white;
+    padding: 5%;
+    border: solid 1px #3d3d3d;
+    border-radius: 5px;
+  }
+
+  h1 {
+    margin: 5px 0px !important;
+    padding: 2%;
+  }
+</style>
+<h1 class="title">Company Information</h1>
+<div id="message-box">
+  <div id="companyList">
+    <h2>Select your Company</h2>
+    <select id="companySelected" style="font-size:20px;" class="custom-select">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+    </select>
+  </div>
+  <hr size="8px" align="center" width="100%">
+  <div id="siteList" style="width: 100%;">
+    <div class="field form-inline">
+        <h2>Company Member</h2>
+    </div>
+    <table style="border:2px solid;" class="table table-bordered">
+      <tbody id="memberTable">
+          <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Salary</th>
+          </tr>
+          <!-- Fake Data  -->
+          <tr>
+            <th>1234567</th>
+            <th>Audi</th>
+            <th>Worker</th>
+            <th>$180</th>
+          </tr>
+          <tr>
+            <th>987654</th>
+            <th>劉學逸</th>
+            <th>Manager</th>
+            <th>$200</th>
+          </tr>
+      </tbody>
+  </table>
+  </table>
+  </div>
+</div>
+{% endblock %}

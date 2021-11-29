@@ -1,12 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attendance</title>
-</head>
-<body>
-  <h1>This is a page for Attendance</h1>
-</body>
-</html>
+{% extends "mobileLayout.html" %}
+{% block title %}Attendance{% endblock %}
+{% block headContent %}
+{% endblock %}
+{% block bodyContent %}
+<style>
+  #message-box {
+    margin: 2%;
+    background-color: white;
+    padding: 5%;
+    border: solid 1px #3d3d3d;
+    border-radius: 5px;
+  }
+
+  label {
+    padding: 3%;
+    border: solid 1px #3d3d3d;
+    margin-bottom: 5px;
+  }
+
+  h1 {
+    margin: 5px 0px !important;
+    padding: 2%;
+  }
+</style>
+<h1 class="title">Attendance</h1>
+<div id="message-box">
+  <div class="bs-stepper-content">
+    <div id="attedance-list" class="content" role="tabpanel">
+      <!-- Fake Data -->
+      <label class="label">
+        Date : 2020-06-01<br>
+        Start Time : 09:00:00<br>
+        End Time : 21:00:00<br>
+        Work Time : 12 hours<br>
+        Location： NTUT<br>
+        Ask for Leave: Yes<br>
+      </label>
+      <label class="label">
+        Date : 2020-06-01<br>
+        Start Time : 09:00:00<br>
+        End Time : 21:00:00<br>
+        Work Time : 12 hours<br>
+        Location： NTUT<br>
+        Ask for Leave: Yes<br>
+      </label>
+      <label class="label">
+        Date : 2020-06-01<br>
+        Start Time : 09:00:00<br>
+        End Time : 21:00:00<br>
+        Work Time : 12 hours<br>
+        Location： NTUT<br>
+        Ask for Leave: Yes<br>
+      </label>
+    </div>
+  </div>
+</div>
+{% endblock %}
