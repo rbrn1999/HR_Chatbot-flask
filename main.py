@@ -23,16 +23,36 @@ def register():
     return jsonify(member)
     
 # Start Work 
-@app.route("/start_work", methods=['GET'])
+@app.route("/start_work", methods=['GET', "POST"])
 def start_work():
     image = os.path.join(app.config['UPLOAD_FOLDER'], 'start-work.png')
     return render_template('startWork.html', image=image)
+
+@app.route("/submit/start", methods=['POST'])
+def submit_start_work():
+    date = request.get_json()['date']
+    longitude = request.get_json()['longitude']
+    latitude = request.get_json()['latitude']
+    print(date, longitude, latitude)
+    return render_template('success.html')
+  
+#  ------------------------------------------------------------------------------------------ 
   
 # End Work 
 @app.route("/end_work", methods=['GET'])
 def end_work():
     image = os.path.join(app.config['UPLOAD_FOLDER'], 'end-work.png')
     return render_template('endWork.html', image=image)
+
+@app.route("/submit/end", methods=['POST'])
+def submit_end_work():
+    date = request.get_json()['date']
+    longitude = request.get_json()['longitude']
+    latitude = request.get_json()['latitude']
+    return render_template('success.html')
+
+#  ------------------------------------------------------------------------------------------ 
+ 
 
 # Leave Permission 
 @app.route("/leave_permission", methods=['GET'])
@@ -58,3 +78,8 @@ def company_information():
 @app.route("/report", methods=['GET'])
 def report():
     return render_template('report.html')
+
+port = int(os.environ.get('PORT', 8080))
+
+if __name__ == '__main__':
+    app.run(threaded=True, host='127.0.0.1', port=port)

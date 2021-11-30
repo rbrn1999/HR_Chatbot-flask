@@ -29,6 +29,7 @@
   #submit-button {
     width: 50px;
     height: 30px;
+    padding: 5px;
     display: flex;
     background-color: #3d3d3d;
     align-items: center;
@@ -36,25 +37,33 @@
     border-radius: 5px;
   }
 
-  a {
+  #submit-text {
+    margin: 0;
     color: #d8d8d8;
     font-size: 12px;
-    text-decoration: none;
   }
 </style>
+
 <div id="message-box">
   <img src="{{ image }}" />
   <h1>Start Work</h1>
   <p id="gps-location" />
   <p id="date" />
-  <div id="submit-button">
-    <a href="#">Submit</a>
+  <div id="submit-button" onclick="submitData()">
+    <p id="submit-text">Submit</p>
   </div>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
   let locationText = document.getElementById("gps-location");
   let dateText = document.getElementById("date");
-  var loadingLocation = false
+  var loadingLocation = false;
+  let data = {
+    longitude: '',
+    latitude: '',
+    date: '',
+  };
 
   function setLoadingLocation(value) {
     loadingLocation = value;
@@ -71,6 +80,9 @@
   }
 
   function showPosition(position) {
+    data.latitude = position.coords.latitude;
+    data.longitude = position.coords.longitude;
+
     locationText.innerHTML = `Latitude: ${position.coords.latitude} <br>Longitude: ${position.coords.longitude}`;
   }
 
@@ -81,6 +93,8 @@
     ${date.getMonth() + 1}-  
     ${date.getDate()}`;
     let currentTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+
+    data.date = date.toISOString();
 
     dateText.innerHTML = `Date: ${currentDate} <br>Time: ${currentTime}`;
   }
@@ -94,6 +108,26 @@
     if (loadingLocation === true) {
       setInterval(getCurrentTime, 5000);
     }
+  }
+
+  function submitData() {
+    const requestUrl = '/submit/start';
+
+    $.ajax({
+      url: requestUrl,
+      data: JSON.stringify(data),
+      type: "POST",
+      dataType: "json",
+      contentType: "application/json;charset=utf-8",
+
+      success: function () {
+        console.log('Sending data success');
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+        console.log(xhr.status);
+        console.log(thrownError);
+      },
+    });
   }
 
   init()

@@ -11,4 +11,4 @@
 ### After the installation of package and library
 - run ```export FLASK_APP=main.py```
 - run ```export FLASK_ENV=development```
-- run ```flask run --port 3000```
+- run ```flask run```
