@@ -17,30 +17,103 @@
     padding: 2%;
   }
 </style>
+
 <h1 class="title">Leave Permission</h1>
 <div id="message-box">
-  <form action="" method="POST">
+  <form onsubmit="submitData();return false;" method="POST">
     <label class="label">
       <div class="field form-inline">
-        Date：<input type="date" name="date" class="label" value="" required />
+        Date：<input id="date" type="date" name="date" class="label" value="" required />
       </div>
       <div class="field form-inline">
-        Start Time：<input type="time" name="start-time" class="label" value="" required />
+        Start Time：<input id="start" type="time" name="start-time" class="label" value="" required />
       </div>
       <div class="field form-inline">
-        End Time：<input type="time" name="end-time" class="label" value="" required />
+        End Time：<input id="end" type="time" name="end-time" class="label" value="" required />
       </div>
-      <div class="field">
+      <div id="total-time" class="field">
         Total Time：
       </div>
       <div class="field">
         Location：None
       </div>
       <div class="field form-inline">
-        <button class="button is-link">Save</button>
+        <button class="button is-link">Submit</button>
         <a class="button is-link" href="" style="margin-left: 5%">Cancel</a>
       </div>
     </label>
   </form>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+  const dateInput = document.getElementById('date');
+  const startInput = document.getElementById('start');
+  const endInput = document.getElementById('end');
+  const totalTime = document.getElementById('total-time')
+
+  let data = {
+    date: '',
+    startTime: '',
+    endTime: '',
+    totalTime: '',
+    location: '',
+    askForLeave: true,
+  }
+
+  dateInput.addEventListener('change', (event) => updateValue('date', event));
+  startInput.addEventListener('change', (event) => updateValue('startTime', event));
+  endInput.addEventListener('change', (event) =>updateValue('endTime', event));
+
+  function differentTime(start, end) {
+    start = start.split(":");
+    end = end.split(":");
+    var startDate = new Date(0, 0, 0, start[0], start[1], 0);
+    var endDate = new Date(0, 0, 0, end[0], end[1], 0);
+    var diff = endDate.getTime() - startDate.getTime();
+    var hours = Math.floor(diff / 1000 / 60 / 60);
+    diff -= hours * 1000 * 60 * 60;
+    var minutes = Math.floor(diff / 1000 / 60);
+
+    // If using time pickers with 24 hours format, add the below line get exact hours
+    if (hours < 0)
+       hours = hours + 24;
+
+    return (hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes;
+  }
+
+  function updateValue(key, event) {
+    event.preventDefault();
+    data[key] = event.target.value;
+
+    // 需要防呆
+    if (key === 'endTime') {
+      const total = differentTime(data.startTime, event.target.value);
+      data['totalTime'] =  total;
+
+      totalTime.innerHTML = `Total Time: ${total}`;
+    }
+  }
+
+  function submitData() {
+    const requestUrl = '/submit/leave';
+
+    $.ajax({
+      url: requestUrl,
+      data: JSON.stringify(data),
+      type: "POST",
+      dataType: "json",
+      contentType: "application/json;charset=utf-8",
+
+      success: function () {
+        console.log('Sending data success');
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+        console.log(xhr.status);
+        console.log(thrownError);
+      },
+    });
+  }
+
+</script>
 {% endblock %}

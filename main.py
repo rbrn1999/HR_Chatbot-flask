@@ -21,7 +21,9 @@ def register():
     #     publishThread = threading.Thread(target=publish_messages, args=({"member" : member},))
     #     publishThread.start()
     return jsonify(member)
-    
+
+#  ------------------------------------------------------------------------------------------ 
+   
 # Start Work 
 @app.route("/start_work", methods=['GET', "POST"])
 def start_work():
@@ -39,7 +41,7 @@ def submit_start_work():
 #  ------------------------------------------------------------------------------------------ 
   
 # End Work 
-@app.route("/end_work", methods=['GET'])
+@app.route("/end_work", methods=['GET', 'POST'])
 def end_work():
     image = os.path.join(app.config['UPLOAD_FOLDER'], 'end-work.png')
     return render_template('endWork.html', image=image)
@@ -53,31 +55,49 @@ def submit_end_work():
 
 #  ------------------------------------------------------------------------------------------ 
  
-
 # Leave Permission 
-@app.route("/leave_permission", methods=['GET'])
+@app.route("/leave_permission", methods=['GET', 'POST'])
 def leave_permission():
     return render_template('leavePermission.html')
+
+@app.route("/submit/leave", methods=['POST'])
+def submit_leave_permission():
+    date = request.get_json()['date']
+    start_time = request.get_json()['startTime']
+    end_time = request.get_json()['end_time']
+    location = request.get_json()['location']
+    ask_for_leave = request.get_json()['askForLeave']
+    return render_template('success.html')
+
+#  ------------------------------------------------------------------------------------------ 
   
 # Attendance 
 @app.route("/attendance", methods=['GET'])
 def attendance():
     return render_template('attendance.html')
 
+#  ------------------------------------------------------------------------------------------ 
+
 # Personal Information 
 @app.route("/personal_information", methods=['GET'])
 def personal_information():
     return render_template('personalInformation.html')
+
+#  ------------------------------------------------------------------------------------------ 
   
 # Company Information 
 @app.route("/company_information", methods=['GET'])
 def company_information():
     return render_template('companyInformation.html')
 
+#  ------------------------------------------------------------------------------------------ 
+
 # Report 
 @app.route("/report", methods=['GET'])
 def report():
     return render_template('report.html')
+
+#  ------------------------------------------------------------------------------------------ 
 
 port = int(os.environ.get('PORT', 8080))
 
