@@ -1,6 +1,6 @@
 import os
-from line_api import PushMessage
-from firestore_DAO import FirestoreDAO
+# from line_api import PushMessage
+# from firestore_DAO import FirestoreDAO
 from flask import Flask, request, render_template, jsonify
 
 image_folder = os.path.join('static', 'images')
@@ -8,19 +8,19 @@ image_folder = os.path.join('static', 'images')
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = image_folder
 
-firestoreDAO = FirestoreDAO()
+# firestoreDAO = FirestoreDAO()
 
-# Member Register 
-@app.route("/register", methods=['POST'])
-def register():
-    memberData = request.get_json(force=True)
-    member = firestoreDAO.setMember(memberData)
-    # if "setMember" in member.keys():
-    #     # - pubsub
-    #     member["companyName"] = firestoreDAO.getCompanies({'companyId': config.companyId})[0]['name']
-    #     publishThread = threading.Thread(target=publish_messages, args=({"member" : member},))
-    #     publishThread.start()
-    return jsonify(member)
+# # Member Register 
+# @app.route("/register", methods=['POST'])
+# def register():
+#     memberData = request.get_json(force=True)
+#     member = firestoreDAO.setMember(memberData)
+#     # if "setMember" in member.keys():
+#     #     # - pubsub
+#     #     member["companyName"] = firestoreDAO.getCompanies({'companyId': config.companyId})[0]['name']
+#     #     publishThread = threading.Thread(target=publish_messages, args=({"member" : member},))
+#     #     publishThread.start()
+#     return jsonify(member)
 
 #  ------------------------------------------------------------------------------------------ 
    
@@ -64,7 +64,7 @@ def leave_permission():
 def submit_leave_permission():
     date = request.get_json()['date']
     start_time = request.get_json()['startTime']
-    end_time = request.get_json()['end_time']
+    end_time = request.get_json()['endTime']
     location = request.get_json()['location']
     ask_for_leave = request.get_json()['askForLeave']
     return render_template('success.html')
@@ -79,9 +79,17 @@ def attendance():
 #  ------------------------------------------------------------------------------------------ 
 
 # Personal Information 
-@app.route("/personal_information", methods=['GET'])
+@app.route("/personal_information", methods=['GET', 'POST'])
 def personal_information():
     return render_template('personalInformation.html')
+
+@app.route("/save", methods=['POST'])
+def save_user_data():
+    name = request.get_json()['name']
+    email = request.get_json()['email']
+    user_id = request.get_json()['id']
+    role = request.get_json()['role']
+    return render_template('success.html')
 
 #  ------------------------------------------------------------------------------------------ 
   

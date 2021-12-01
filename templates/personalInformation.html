@@ -24,20 +24,20 @@
 </style>
 <h1 class="title">Personal Information</h1>
 <div id="message-box">
-  <form action="" method="POST">
+  <form onsubmit="submitData();return false;" method="POST">
     <label class="label">
       <div class="field form-inline">
-        Name：<input type="text" name="name" class="label" value="" required />
+        Name：<input id="name" type="text" name="name" class="label" value="" required />
       </div>
       <div class="field form-inline">
-        Email：<input type="email" name="email" class="label" value="" required />
+        Email：<input id="email" type="email" name="email" class="label" value="" required />
       </div>
       <div class="field">
         Id：
       </div>
       <div class="field">
         <label for="角色" class="label">Role：
-          <input type="radio" name="role" value="customer" />Worker
+          <input type="radio" name="role" value="worker" />Worker
           <input type="radio" name="role" value="manager" />Manager
         </label>
       </div>
@@ -48,4 +48,50 @@
     </label>
   </form>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+  const nameInput = document.getElementById('name');
+  const emailInput = document.getElementById('email');
+
+  let data = {
+    name: '',
+    email: '',
+    id: '',
+    role: '',
+  }
+
+  nameInput.addEventListener('change', (event) => updateValue('name', event));
+  emailInput.addEventListener('change', (event) => updateValue('email', event));
+  
+  function updateValue(key, event) {
+    event.preventDefault();
+    data[key] = event.target.value;
+  }
+
+  function submitData() {
+    const requestUrl = '/save';
+
+    data.role = $("input[name=role]:checked").val();
+
+    console.log({data});
+
+    // $.ajax({
+    //   url: requestUrl,
+    //   data: JSON.stringify(data),
+    //   type: "POST",
+    //   dataType: "json",
+    //   contentType: "application/json;charset=utf-8",
+
+    //   success: function () {
+    //     console.log('Sending data success');
+    //   },
+    //   error: function (xhr, ajaxOptions, thrownError) {
+    //     console.log(xhr.status);
+    //     console.log(thrownError);
+    //   },
+    // });
+  }
+
+</script>
 {% endblock %}
