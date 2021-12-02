@@ -37,7 +37,7 @@ def start_work():
 def submit_start_work():
     data = request.get_json()
     app.logger.info(data)
-    firestoreDAO.addBeginOfWorkRecord(data)
+    firestoreDAO.addBeginOfWorkRecord(data, app.logger)
     return ''
   
 #  ------------------------------------------------------------------------------------------ 
