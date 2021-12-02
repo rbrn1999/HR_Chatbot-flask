@@ -104,6 +104,7 @@ def save_user_data():
 # Company Information 
 @app.route("/company_information", methods=['GET'])
 def company_information():
+    role = 'manager'
     fake_data = [
         {
            'member_id': 'qwertyuiop',
@@ -118,7 +119,7 @@ def company_information():
            'salary': 180,
         }
     ]
-    return render_template('companyInformation.html', companies=fake_data)
+    return render_template('companyInformation.html', companies=fake_data, role=role)
 
 #  ------------------------------------------------------------------------------------------ 
 

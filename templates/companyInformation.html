@@ -16,6 +16,10 @@
     margin: 5px 0px !important;
     padding: 2%;
   }
+
+  th {
+    font-size: 0.7rem;
+  }
 </style>
 <h1 class="title">Company Information</h1>
 <div id="message-box">
@@ -32,13 +36,15 @@
     <div class="field form-inline">
         <h2>Company Member</h2>
     </div>
-    <table style="border:2px solid;" class="table table-bordered">
+    <table style="border:2px solid; width: 100%;" class="table table-bordered">
       <thead>
         <tr>
           <th>ID</th>
           <th>Name</th>
           <th>Role</th>
+          {% if role == 'manager' %}
           <th>Salary</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody id="memberTable">
@@ -47,7 +53,9 @@
             <th>{{company['member_id']}}</th>
             <th>{{company['name']}}</th>
             <th>{{company['role']}}</th>
+            {% if role == 'manager' %}
             <th>{{company['salary']}}</th>
+            {% endif %}
           </tr>
           {% endfor %}
       </tbody>
