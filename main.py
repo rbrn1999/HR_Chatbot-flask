@@ -1,6 +1,6 @@
 import os
-# from line_api import PushMessage
-# from firestore_DAO import FirestoreDAO
+from line_api import PushMessage
+from firestore_DAO import FirestoreDAO
 from flask import Flask, request, render_template, jsonify
 
 image_folder = os.path.join('static', 'images')
@@ -8,50 +8,58 @@ image_folder = os.path.join('static', 'images')
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = image_folder
 
-# firestoreDAO = FirestoreDAO()
+firestoreDAO = FirestoreDAO()
 
-# # Member Register 
-# @app.route("/register", methods=['POST'])
-# def register():
-#     memberData = request.get_json(force=True)
-#     member = firestoreDAO.setMember(memberData)
-#     # if "setMember" in member.keys():
-#     #     # - pubsub
-#     #     member["companyName"] = firestoreDAO.getCompanies({'companyId': config.companyId})[0]['name']
-#     #     publishThread = threading.Thread(target=publish_messages, args=({"member" : member},))
-#     #     publishThread.start()
-#     return jsonify(member)
+# Member Register 
+@app.route("/register", methods=['POST'])
+def register():
+    memberData = request.get_json(force=True)
+    member = firestoreDAO.setMember(memberData)
+    # if "setMember" in member.keys():
+    #     # - pubsub
+    #     member["companyName"] = firestoreDAO.getCompanies({'companyId': config.companyId})[0]['name']
+    #     publishThread = threading.Thread(target=publish_messages, args=({"member" : member},))
+    #     publishThread.start()
+    return jsonify(member)
 
 #  ------------------------------------------------------------------------------------------ 
    
 # Start Work 
 @app.route("/start_work", methods=['GET', "POST"])
 def start_work():
+    # Member ID
+    member_id = 107590061;
+    
     image = os.path.join(app.config['UPLOAD_FOLDER'], 'start-work.png')
-    return render_template('startWork.html', image=image)
+    return render_template('startWork.html', image=image, member_id=member_id)
 
 @app.route("/submit/start", methods=['POST'])
 def submit_start_work():
+    member_id = request.get_json()['memberId']
     date = request.get_json()['date']
     longitude = request.get_json()['longitude']
     latitude = request.get_json()['latitude']
-    print(date, longitude, latitude)
-    return render_template('success.html')
+    print(member_id, date, longitude, latitude)
+    return ''
   
 #  ------------------------------------------------------------------------------------------ 
   
 # End Work 
 @app.route("/end_work", methods=['GET', 'POST'])
 def end_work():
+    # Member ID
+    member_id = 107590061;
+    
     image = os.path.join(app.config['UPLOAD_FOLDER'], 'end-work.png')
-    return render_template('endWork.html', image=image)
+    return render_template('endWork.html', image=image, member_id=member_id)
 
 @app.route("/submit/end", methods=['POST'])
 def submit_end_work():
+    member_id = request.get_json()['memberId']
     date = request.get_json()['date']
     longitude = request.get_json()['longitude']
     latitude = request.get_json()['latitude']
-    return render_template('success.html')
+    return ''
 
 #  ------------------------------------------------------------------------------------------ 
  
@@ -67,7 +75,7 @@ def submit_leave_permission():
     end_time = request.get_json()['endTime']
     location = request.get_json()['location']
     ask_for_leave = request.get_json()['askForLeave']
-    return render_template('success.html')
+    return ''
 
 #  ------------------------------------------------------------------------------------------ 
   
@@ -89,7 +97,7 @@ def save_user_data():
     email = request.get_json()['email']
     user_id = request.get_json()['id']
     role = request.get_json()['role']
-    return render_template('success.html')
+    return ''
 
 #  ------------------------------------------------------------------------------------------ 
   
@@ -104,6 +112,13 @@ def company_information():
 @app.route("/report", methods=['GET'])
 def report():
     return render_template('report.html')
+
+#  ------------------------------------------------------------------------------------------ 
+
+#Success
+@app.route("/success", methods=['GET'])
+def success():
+    return render_template('success.html')
 
 #  ------------------------------------------------------------------------------------------ 
 

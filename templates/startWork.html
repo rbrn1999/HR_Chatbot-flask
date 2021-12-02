@@ -60,6 +60,7 @@
   let dateText = document.getElementById("date");
   var loadingLocation = false;
   let data = {
+    memberId: '{{ member_id }}',
     longitude: '',
     latitude: '',
     date: '',
@@ -117,11 +118,11 @@
       url: requestUrl,
       data: JSON.stringify(data),
       type: "POST",
-      dataType: "json",
       contentType: "application/json;charset=utf-8",
 
       success: function () {
         console.log('Sending data success');
+        window.location = '/success';
       },
       error: function (xhr, ajaxOptions, thrownError) {
         console.log(xhr.status);
