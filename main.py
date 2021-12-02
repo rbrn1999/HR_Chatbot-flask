@@ -1,5 +1,5 @@
 import os
-from line_api import PushMessage
+#from line_api import PushMessage
 from firestore_DAO import FirestoreDAO
 from flask import Flask, request, render_template, jsonify
 
@@ -35,11 +35,9 @@ def start_work():
 
 @app.route("/submit/start", methods=['POST'])
 def submit_start_work():
-    member_id = request.get_json()['memberId']
-    date = request.get_json()['date']
-    longitude = request.get_json()['longitude']
-    latitude = request.get_json()['latitude']
-    print(member_id, date, longitude, latitude)
+    data = request.get_json()
+    app.logger.info(data)
+    firestoreDAO.addBeginOfWorkRecord(data)
     return ''
   
 #  ------------------------------------------------------------------------------------------ 
@@ -55,10 +53,8 @@ def end_work():
 
 @app.route("/submit/end", methods=['POST'])
 def submit_end_work():
-    member_id = request.get_json()['memberId']
-    date = request.get_json()['date']
-    longitude = request.get_json()['longitude']
-    latitude = request.get_json()['latitude']
+    data = request.get_json()
+    firestoreDAO.addEndOfWorkRecord(data, app.logger)
     return ''
 
 #  ------------------------------------------------------------------------------------------ 

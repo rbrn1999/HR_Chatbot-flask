@@ -1,4 +1,5 @@
 from firebase_admin import firestore, initialize_app
+from datetime import datetime
 from config import companyId
 
 class FirestoreDAO:
@@ -52,3 +53,41 @@ class FirestoreDAO:
             if doc.to_dict() != None:
                 members.append(doc.to_dict())
         return members
+    
+    def addBeginOfWorkRecord(self, record):
+        collection = self.__db.collection("beginOfWork")
+        collection.add(record)
+    
+    #get the (only) record of the last 20 hours
+    def getBeginOfWorkRecord(self, memberId):
+        collection = self.__db.collection("beginOfWork")
+        for doc in collection.stream():
+            timeDelta = datetime.now() - datetime.fromisoformat(doc.to_dict()['date'][:-1]) #exclude the 'Z' in the end before formatting 
+            if doc.to_dict()['memberId'] == memberId and timeDelta.seconds < 72000:
+                return doc
+        return None
+
+
+    def addEndOfWorkRecord(self, record, logger):
+        if self.getBeginOfWorkRecord(record['memberId']) is None:
+            logger.info("no start work record in 20 hours")
+            return
+        if self.getEndOfWorkRecord(record['memberId']):
+            start = datetime.fromisoformat(self.getBeginOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
+            end = datetime.fromisoformat(self.getEndOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
+            logger.info(start)
+            logger.info(end)
+            if start <= end:
+                logger.info("didn't start work after ending work since last time")
+                return
+        collection = self.__db.collection("endOfWork")
+        collection.add(record)
+
+    #get the (only) record of the last 20 hours
+    def getEndOfWorkRecord(self, memberId):
+        collection = self.__db.collection("endOfWork")
+        for doc in collection.stream():
+            timeDelta = datetime.now() - datetime.fromisoformat(doc.to_dict()['date'][:-1]) 
+            if doc.to_dict()['memberId'] == memberId and timeDelta.seconds < 72000:
+                return doc
+        return None
