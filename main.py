@@ -1,6 +1,6 @@
 import os
-from line_api import PushMessage
-from firestore_DAO import FirestoreDAO
+# from line_api import PushMessage
+# from firestore_DAO import FirestoreDAO
 from flask import Flask, request, render_template, jsonify
 
 image_folder = os.path.join('static', 'images')
@@ -8,19 +8,19 @@ image_folder = os.path.join('static', 'images')
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = image_folder
 
-firestoreDAO = FirestoreDAO()
+# firestoreDAO = FirestoreDAO()
 
-# Member Register 
-@app.route("/register", methods=['POST'])
-def register():
-    memberData = request.get_json(force=True)
-    member = firestoreDAO.setMember(memberData)
-    # if "setMember" in member.keys():
-    #     # - pubsub
-    #     member["companyName"] = firestoreDAO.getCompanies({'companyId': config.companyId})[0]['name']
-    #     publishThread = threading.Thread(target=publish_messages, args=({"member" : member},))
-    #     publishThread.start()
-    return jsonify(member)
+# # Member Register 
+# @app.route("/register", methods=['POST'])
+# def register():
+#     memberData = request.get_json(force=True)
+#     member = firestoreDAO.setMember(memberData)
+#     # if "setMember" in member.keys():
+#     #     # - pubsub
+#     #     member["companyName"] = firestoreDAO.getCompanies({'companyId': config.companyId})[0]['name']
+#     #     publishThread = threading.Thread(target=publish_messages, args=({"member" : member},))
+#     #     publishThread.start()
+#     return jsonify(member)
 
 #  ------------------------------------------------------------------------------------------ 
    
@@ -66,10 +66,14 @@ def submit_end_work():
 # Leave Permission 
 @app.route("/leave_permission", methods=['GET', 'POST'])
 def leave_permission():
-    return render_template('leavePermission.html')
+    # Member ID
+    member_id = 107590061;
+    
+    return render_template('leavePermission.html', member_id=member_id)
 
 @app.route("/submit/leave", methods=['POST'])
 def submit_leave_permission():
+    member_id = request.get_json()['memberId']
     date = request.get_json()['date']
     start_time = request.get_json()['startTime']
     end_time = request.get_json()['endTime']
@@ -104,7 +108,21 @@ def save_user_data():
 # Company Information 
 @app.route("/company_information", methods=['GET'])
 def company_information():
-    return render_template('companyInformation.html')
+    fake_data = [
+        {
+           'member_id': 'qwertyuiop',
+           'name': 'audi',
+           'role': 'worker',
+           'salary': 180,
+        },
+        {
+           'member_id': 'assdfghjkl',
+           'name': 'john',
+           'role': 'manager',
+           'salary': 180,
+        }
+    ]
+    return render_template('companyInformation.html', companies=fake_data)
 
 #  ------------------------------------------------------------------------------------------ 
 

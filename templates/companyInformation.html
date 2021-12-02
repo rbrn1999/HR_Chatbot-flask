@@ -33,26 +33,23 @@
         <h2>Company Member</h2>
     </div>
     <table style="border:2px solid;" class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Salary</th>
+        </tr>
+      </thead>
       <tbody id="memberTable">
+          {% for company in companies %}
           <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Role</th>
-              <th>Salary</th>
+            <th>{{company['member_id']}}</th>
+            <th>{{company['name']}}</th>
+            <th>{{company['role']}}</th>
+            <th>{{company['salary']}}</th>
           </tr>
-          <!-- Fake Data  -->
-          <tr>
-            <th>1234567</th>
-            <th>Audi</th>
-            <th>Worker</th>
-            <th>$180</th>
-          </tr>
-          <tr>
-            <th>987654</th>
-            <th>劉學逸</th>
-            <th>Manager</th>
-            <th>$200</th>
-          </tr>
+          {% endfor %}
       </tbody>
   </table>
   </table>

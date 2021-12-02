@@ -1,16 +1,16 @@
-from linebot import LineBotApi
-from linebot.models import TextSendMessage
-from config import secretResourceId, version
-from secret_manager import access_secret_version
+# from linebot import LineBotApi
+# from linebot.models import TextSendMessage
+# from config import secretResourceId, version
+# from secret_manager import access_secret_version
 
 
-channelAccessToken = access_secret_version(secretResourceId, version)
+# channelAccessToken = access_secret_version(secretResourceId, version)
 
-class PushMessage:
-    def __init__(self, channelToken=channelAccessToken):
-        self.lineBotApi = LineBotApi(channelToken)
+# class PushMessage:
+#     def __init__(self, channelToken=channelAccessToken):
+#         self.lineBotApi = LineBotApi(channelToken)
 
-    def pushMessage(self, inputModel):
-        if inputModel['messageType'] == 'textTemplate':
-            templateMessage = TextSendMessage(text=inputModel['content'])
-            self.lineBotApi.push_message(inputModel['lineId'], [templateMessage])
+#     def pushMessage(self, inputModel):
+#         if inputModel['messageType'] == 'textTemplate':
+#             templateMessage = TextSendMessage(text=inputModel['content'])
+#             self.lineBotApi.push_message(inputModel['lineId'], [templateMessage])
