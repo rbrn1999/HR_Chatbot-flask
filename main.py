@@ -1,6 +1,6 @@
 import os
-# from line_api import PushMessage
-# from firestore_DAO import FirestoreDAO
+from line_api import PushMessage
+from firestore_DAO import FirestoreDAO
 from flask import Flask, request, render_template, jsonify
 
 image_folder = os.path.join('static', 'images')
@@ -8,19 +8,19 @@ image_folder = os.path.join('static', 'images')
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = image_folder
 
-# firestoreDAO = FirestoreDAO()
+firestoreDAO = FirestoreDAO()
 
-# # Member Register 
-# @app.route("/register", methods=['POST'])
-# def register():
-#     memberData = request.get_json(force=True)
-#     member = firestoreDAO.setMember(memberData)
-#     # if "setMember" in member.keys():
-#     #     # - pubsub
-#     #     member["companyName"] = firestoreDAO.getCompanies({'companyId': config.companyId})[0]['name']
-#     #     publishThread = threading.Thread(target=publish_messages, args=({"member" : member},))
-#     #     publishThread.start()
-#     return jsonify(member)
+# Member Register 
+@app.route("/register", methods=['POST'])
+def register():
+    memberData = request.get_json(force=True)
+    member = firestoreDAO.setMember(memberData)
+    # if "setMember" in member.keys():
+    #     # - pubsub
+    #     member["companyName"] = firestoreDAO.getCompanies({'companyId': config.companyId})[0]['name']
+    #     publishThread = threading.Thread(target=publish_messages, args=({"member" : member},))
+    #     publishThread.start()
+    return jsonify(member)
 
 #  ------------------------------------------------------------------------------------------ 
    
