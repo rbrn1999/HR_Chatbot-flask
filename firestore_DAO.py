@@ -57,7 +57,7 @@ class FirestoreDAO:
     def addBeginOfWorkRecord(self, record, logger):
         if self.getBeginOfWorkRecord(record['memberId']) is not None:
             logger.info("already started work record in the past 20 hours")
-            return
+            return False
         if self.getEndOfWorkRecord(record['memberId']):
             start = datetime.fromisoformat(self.getBeginOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
             end = datetime.fromisoformat(self.getEndOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
@@ -65,9 +65,10 @@ class FirestoreDAO:
             logger.info(end)
             if start >= end:
                 logger.info("didn't end work after starting work since last time")
-                return
+                return False
         collection = self.__db.collection("beginOfWork")
         collection.add(record)
+        return True
     
     #get the (only) record of the last 20 hours
     def getBeginOfWorkRecord(self, memberId):
@@ -82,7 +83,7 @@ class FirestoreDAO:
     def addEndOfWorkRecord(self, record, logger):
         if self.getBeginOfWorkRecord(record['memberId']) is None:
             logger.info("no start work record in 20 hours")
-            return
+            return False
         if self.getEndOfWorkRecord(record['memberId']):
             start = datetime.fromisoformat(self.getBeginOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
             end = datetime.fromisoformat(self.getEndOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
@@ -90,9 +91,10 @@ class FirestoreDAO:
             logger.info(end)
             if start <= end:
                 logger.info("didn't start work after ending work since last time")
-                return
+                return False
         collection = self.__db.collection("endOfWork")
         collection.add(record)
+        return True
 
     #get the (only) record of the last 20 hours
     def getEndOfWorkRecord(self, memberId):

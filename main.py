@@ -1,7 +1,7 @@
 import os
-#from line_api import PushMessage
+from line_api import PushMessage
 from firestore_DAO import FirestoreDAO
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, redirect, url_for
 
 image_folder = os.path.join('static', 'images')
 
@@ -33,12 +33,18 @@ def start_work():
     image = os.path.join(app.config['UPLOAD_FOLDER'], 'start-work.png')
     return render_template('startWork.html', image=image, member_id=member_id)
 
-@app.route("/submit/start", methods=['POST'])
+@app.route("/submit/start", methods=['GET', 'POST'])
 def submit_start_work():
     data = request.get_json()
     app.logger.info(data)
-    firestoreDAO.addBeginOfWorkRecord(data, app.logger)
-    return ''
+    is_valid = firestoreDAO.addBeginOfWorkRecord(data, app.logger)
+    
+    if (is_valid):
+        message = 'Successfully submit your start work log'
+        return redirect(url_for('success', message=message))
+    else:
+        message = 'Fail submit your start work log'
+        return redirect(url_for('error', message=message))
   
 #  ------------------------------------------------------------------------------------------ 
   
@@ -54,8 +60,15 @@ def end_work():
 @app.route("/submit/end", methods=['POST'])
 def submit_end_work():
     data = request.get_json()
-    firestoreDAO.addEndOfWorkRecord(data, app.logger)
-    return ''
+    app.logger.info(data)
+    is_valid = firestoreDAO.addBeginOfWorkRecord(data, app.logger)
+    
+    if (is_valid):
+        message = 'Successfully submit your end work log'
+        return redirect(url_for('success', message=message))
+    else:
+        message = 'Fail submit your end work log'
+        return redirect(url_for('error', message=message))
 
 #  ------------------------------------------------------------------------------------------ 
  
@@ -130,10 +143,17 @@ def report():
 
 #  ------------------------------------------------------------------------------------------ 
 
-#Success
-@app.route("/success", methods=['GET'])
-def success():
-    return render_template('success.html')
+# Success
+@app.route("/success/<message>", methods=['GET'])
+def success(message):
+    return render_template('success.html', message=message)
+
+#  ------------------------------------------------------------------------------------------ 
+
+# Error
+@app.route("/error/<message>", methods=['GET'])
+def error(message):
+    return render_template('error.html', message=message)
 
 #  ------------------------------------------------------------------------------------------ 
 
