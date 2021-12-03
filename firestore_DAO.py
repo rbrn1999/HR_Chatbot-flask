@@ -37,9 +37,14 @@ class FirestoreDAO:
             "setMember": True
         }
 
-    def updateMember(self, member):
-        doc = self.__db.document(f"members/{member['id']}")
-        doc.update(member)
+    def updateMember(self, member, logger):
+        doc_ref = self.__db.document(f"members/{member['id']}")
+        if doc_ref.get().exists:
+            doc_ref.update(member)
+            return True
+        else:
+            logger.info('ID NOT FOUND')
+            return False
 
     def getMembers(self, company) -> list:
         members = []

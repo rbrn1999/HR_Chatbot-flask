@@ -128,10 +128,8 @@ def personal_information():
 
 @app.route("/save", methods=['POST'])
 def save_user_data():
-    name = request.get_json()['name']
-    email = request.get_json()['email']
-    user_id = request.get_json()['id']
-    role = request.get_json()['role']
+    data = request.get_json()
+    firestoreDAO.updateMember(data, app.logger)
     return ''
 
 #  ------------------------------------------------------------------------------------------ 

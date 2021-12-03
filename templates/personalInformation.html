@@ -76,21 +76,20 @@
 
     console.log({data});
 
-    // $.ajax({
-    //   url: requestUrl,
-    //   data: JSON.stringify(data),
-    //   type: "POST",
-    //   dataType: "json",
-    //   contentType: "application/json;charset=utf-8",
+    $.ajax({
+      url: requestUrl,
+      data: JSON.stringify(data),
+      type: "POST",
+      contentType: "application/json;charset=utf-8",
 
-    //   success: function () {
-    //     console.log('Sending data success');
-    //   },
-    //   error: function (xhr, ajaxOptions, thrownError) {
-    //     console.log(xhr.status);
-    //     console.log(thrownError);
-    //   },
-    // });
+      success: function () {
+        console.log('Sending data success');
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+        console.log(xhr.status);
+        console.log(thrownError);
+      },
+    });
   }
 
 </script>
