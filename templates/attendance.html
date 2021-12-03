@@ -27,15 +27,38 @@
 <h1 class="title">Attendance</h1>
 <div id="message-box">
   <div class="bs-stepper-content">
+    <h2>Start Work</h2>
     <div id="attedance-list" class="content" role="tabpanel">
-      {% for attendance in attendances %}
+      {% for start in starts %}
         <label class="label">
-          Date : {{ attendance['date'] }}<br>
-          Start Time : {{ attendance['start'] }}<br>
-          End Time : {{ attendance['end'] }}<br>
-          Work Time : {{ attendance['total_time'] }}<br>
-          Location： {{ attendance['location'] }}<br>
-          Ask for Leave: {{ attendance['ask_for_leave'] }}<br>
+          Date : {{ start['date'] }}<br>
+          Start Time : {{ start['start'] }}<br>
+          Location： {{ start['location'] }}<br>
+        </label>
+      {% endfor %}
+      </label>
+    </div>
+    <h2>End Work</h2>
+    <div id="attedance-list" class="content" role="tabpanel">
+      {% for end in ends %}
+        <label class="label">
+          Date : {{ end['date'] }}<br>
+          End Time : {{ end['end'] }}<br>
+          Location： {{ end['location'] }}<br>
+        </label>
+      {% endfor %}
+      </label>
+    </div>
+    <h2>Leave Permission</h2>
+    <div id="attedance-list" class="content" role="tabpanel">
+      {% for leave in leaves %}
+        <label class="label">
+          Date : {{ leave['date'] }}<br>
+          Start Time : {{ leave['start'] }}<br>
+          End Time : {{ leave['end'] }}<br>
+          Work Time : {{ leave['total_time'] }}<br>
+          Location： {{ leave['location'] }}<br>
+          Ask for Leave: {{ leave['ask_for_leave'] }}<br>
         </label>
       {% endfor %}
       </label>

@@ -11,8 +11,9 @@ app.config['UPLOAD_FOLDER'] = image_folder
 firestoreDAO = FirestoreDAO()
 
 # Member Register 
-@app.route("/register", methods=['POST'])
+@app.route("/register/<memberId>", methods=['POST'])
 def register():
+    member_id = memberId
     memberData = request.get_json(force=True)
     member = firestoreDAO.setMember(memberData)
     # if "setMember" in member.keys():
@@ -25,11 +26,13 @@ def register():
 #  ------------------------------------------------------------------------------------------ 
    
 # Start Work 
-@app.route("/start_work", methods=['GET', "POST"])
-def start_work():
+@app.route("/start_work/<memberId>", methods=['GET', "POST"])
+def start_work(memberId):
+    print(memberId)
     # Member ID
-    member_id = 107590061;
+    member_id = memberId
     
+    print(member_id)
     image = os.path.join(app.config['UPLOAD_FOLDER'], 'start-work.png')
     return render_template('startWork.html', image=image, member_id=member_id)
 
@@ -49,10 +52,10 @@ def submit_start_work():
 #  ------------------------------------------------------------------------------------------ 
   
 # End Work 
-@app.route("/end_work", methods=['GET', 'POST'])
-def end_work():
+@app.route("/end_work/<memberId>", methods=['GET', 'POST'])
+def end_work(memberId):
     # Member ID
-    member_id = 107590061;
+    member_id = memberId;
     
     image = os.path.join(app.config['UPLOAD_FOLDER'], 'end-work.png')
     return render_template('endWork.html', image=image, member_id=member_id)
@@ -73,10 +76,10 @@ def submit_end_work():
 #  ------------------------------------------------------------------------------------------ 
  
 # Leave Permission 
-@app.route("/leave_permission", methods=['GET', 'POST'])
-def leave_permission():
+@app.route("/leave_permission/<memberId>", methods=['GET', 'POST'])
+def leave_permission(memberId):
     # Member ID
-    member_id = 107590061;
+    member_id = memberId;
     
     return render_template('leavePermission.html', member_id=member_id)
 
@@ -93,41 +96,63 @@ def submit_leave_permission():
 #  ------------------------------------------------------------------------------------------ 
   
 # Attendance 
-@app.route("/attendance", methods=['GET'])
+@app.route("/attendance/<memberId>", methods=['GET'])
 def attendance():
-    fake_data = [
+    # Member ID
+    member_id = memberId;
+
+    start_data = [
         {
             'date': '2021-06-09',
             'start': '08:00',
-            'end': '17:00',
-            'total_time': '04:00',
             'location': 'longitude, latitude',
-            'ask_for_leave': 'yes'
         },
         {
             'date': '2021-06-09',
             'start': '08:00',
-            'end': '17:00',
-            'total_time': '04:00',
             'location': 'longitude, latitude',
-            'ask_for_leave': 'no'
         },
         {
             'date': '2021-06-09',
             'start': '08:00',
-            'end': '17:00',
-            'total_time': '04:00',
             'location': 'longitude, latitude',
-            'ask_for_leave': 'no'
         },
     ]
-    return render_template('attendance.html', attendances=fake_data)
+    end_data = [
+        {
+            'date': '2021-06-09',
+            'end': '17:00',
+            'location': 'longitude, latitude',
+        },
+        {
+            'date': '2021-06-09',
+            'end': '17:00',
+            'location': 'longitude, latitude',
+        },
+        {
+            'date': '2021-06-09',
+            'end': '17:00',
+            'location': 'longitude, latitude',
+        },
+        
+    ]
+    leave_data = [
+        {
+            'date': '2021-06-09',
+            'start': '08:00',
+            'end': '17:00',
+            'location': 'none',
+            'ask_for_leave': 'yes',
+        }
+    ]
+    return render_template('attendance.html', starts=start_data, ends=end_data, leaves=leave_data)
 
 #  ------------------------------------------------------------------------------------------ 
 
 # Personal Information 
-@app.route("/personal_information", methods=['GET', 'POST'])
-def personal_information():
+@app.route("/personal_information/<memberId>", methods=['GET', 'POST'])
+def personal_information(memberId):
+    member_id = memberId
     return render_template('personalInformation.html')
 
 @app.route("/save", methods=['POST'])
@@ -141,8 +166,10 @@ def save_user_data():
 #  ------------------------------------------------------------------------------------------ 
   
 # Company Information 
-@app.route("/company_information", methods=['GET'])
-def company_information():
+@app.route("/company_information/<memberId>", methods=['GET'])
+def company_information(memberId):
+    member_id = memberId
+    
     role = 'manager'
     fake_data = [
         {
@@ -163,8 +190,9 @@ def company_information():
 #  ------------------------------------------------------------------------------------------ 
 
 # Report 
-@app.route("/report", methods=['GET'])
-def report():
+@app.route("/report/<memberId>", methods=['GET'])
+def report(memberId):
+    member_id = memberId
     return render_template('report.html')
 
 #  ------------------------------------------------------------------------------------------ 
