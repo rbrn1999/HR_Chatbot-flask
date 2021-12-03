@@ -23,34 +23,21 @@
     padding: 2%;
   }
 </style>
+
 <h1 class="title">Attendance</h1>
 <div id="message-box">
   <div class="bs-stepper-content">
     <div id="attedance-list" class="content" role="tabpanel">
-      <!-- Fake Data -->
-      <label class="label">
-        Date : 2020-06-01<br>
-        Start Time : 09:00:00<br>
-        End Time : 21:00:00<br>
-        Work Time : 12 hours<br>
-        Location： NTUT<br>
-        Ask for Leave: Yes<br>
-      </label>
-      <label class="label">
-        Date : 2020-06-01<br>
-        Start Time : 09:00:00<br>
-        End Time : 21:00:00<br>
-        Work Time : 12 hours<br>
-        Location： NTUT<br>
-        Ask for Leave: Yes<br>
-      </label>
-      <label class="label">
-        Date : 2020-06-01<br>
-        Start Time : 09:00:00<br>
-        End Time : 21:00:00<br>
-        Work Time : 12 hours<br>
-        Location： NTUT<br>
-        Ask for Leave: Yes<br>
+      {% for attendance in attendances %}
+        <label class="label">
+          Date : {{ attendance['date'] }}<br>
+          Start Time : {{ attendance['start'] }}<br>
+          End Time : {{ attendance['end'] }}<br>
+          Work Time : {{ attendance['total_time'] }}<br>
+          Location： {{ attendance['location'] }}<br>
+          Ask for Leave: {{ attendance['ask_for_leave'] }}<br>
+        </label>
+      {% endfor %}
       </label>
     </div>
   </div>

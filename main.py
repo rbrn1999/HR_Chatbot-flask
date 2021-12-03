@@ -1,5 +1,5 @@
 import os
-from line_api import PushMessage
+# from line_api import PushMessage
 from firestore_DAO import FirestoreDAO
 from flask import Flask, request, render_template, jsonify, redirect, url_for
 
@@ -95,7 +95,33 @@ def submit_leave_permission():
 # Attendance 
 @app.route("/attendance", methods=['GET'])
 def attendance():
-    return render_template('attendance.html')
+    fake_data = [
+        {
+            'date': '2021-06-09',
+            'start': '08:00',
+            'end': '17:00',
+            'total_time': '04:00',
+            'location': 'longitude, latitude',
+            'ask_for_leave': 'yes'
+        },
+        {
+            'date': '2021-06-09',
+            'start': '08:00',
+            'end': '17:00',
+            'total_time': '04:00',
+            'location': 'longitude, latitude',
+            'ask_for_leave': 'no'
+        },
+        {
+            'date': '2021-06-09',
+            'start': '08:00',
+            'end': '17:00',
+            'total_time': '04:00',
+            'location': 'longitude, latitude',
+            'ask_for_leave': 'no'
+        },
+    ]
+    return render_template('attendance.html', attendances=fake_data)
 
 #  ------------------------------------------------------------------------------------------ 
 
