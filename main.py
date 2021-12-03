@@ -1,4 +1,5 @@
 import os
+import config
 # from line_api import PushMessage
 from firestore_DAO import FirestoreDAO
 from flask import Flask, request, render_template, jsonify, redirect, url_for
@@ -8,7 +9,7 @@ image_folder = os.path.join('static', 'images')
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = image_folder
 
-firestoreDAO = FirestoreDAO()
+firestoreDAO = FirestoreDAO(logger=app.logger)
 
 # Member Register 
 @app.route("/register/<memberId>", methods=['POST'])
@@ -31,8 +32,6 @@ def start_work(memberId):
     print(memberId)
     # Member ID
     member_id = memberId
-    
-    print(member_id)
     image = os.path.join(app.config['UPLOAD_FOLDER'], 'start-work.png')
     return render_template('startWork.html', image=image, member_id=member_id)
 
@@ -40,7 +39,7 @@ def start_work(memberId):
 def submit_start_work():
     data = request.get_json()
     app.logger.info(data)
-    is_valid = firestoreDAO.addBeginOfWorkRecord(data, app.logger)
+    is_valid = firestoreDAO.addBeginOfWorkRecord(data)
     
     if (is_valid):
         message = 'Successfully submit your start work log'
@@ -64,7 +63,7 @@ def end_work(memberId):
 def submit_end_work():
     data = request.get_json()
     app.logger.info(data)
-    is_valid = firestoreDAO.addBeginOfWorkRecord(data, app.logger)
+    is_valid = firestoreDAO.addBeginOfWorkRecord(data)
     
     if (is_valid):
         message = 'Successfully submit your end work log'
@@ -85,12 +84,8 @@ def leave_permission(memberId):
 
 @app.route("/submit/leave", methods=['POST'])
 def submit_leave_permission():
-    member_id = request.get_json()['memberId']
-    date = request.get_json()['date']
-    start_time = request.get_json()['startTime']
-    end_time = request.get_json()['endTime']
-    location = request.get_json()['location']
-    ask_for_leave = request.get_json()['askForLeave']
+    data = request.get_json()
+    firestoreDAO.addDayOffRecord(data)
     return ''
 
 #  ------------------------------------------------------------------------------------------ 
@@ -157,10 +152,8 @@ def personal_information(memberId):
 
 @app.route("/save", methods=['POST'])
 def save_user_data():
-    name = request.get_json()['name']
-    email = request.get_json()['email']
-    user_id = request.get_json()['id']
-    role = request.get_json()['role']
+    data = request.get_json()
+    firestoreDAO.updateMember(data)
     return ''
 
 #  ------------------------------------------------------------------------------------------ 
@@ -170,6 +163,12 @@ def save_user_data():
 def company_information(memberId):
     member_id = memberId
     
+@app.route("/company_information/<memberId>", methods=['GET'])
+def company_information(memberId):
+    members = firestoreDAO.getMembers({'companyId': config.companyId})
+    memberId = memberId
+    member = firestoreDAO.getMember({'companyId': config.companyId}, memberId)
+    role = member['role'] if member is not None else None
     role = 'manager'
     fake_data = [
         {

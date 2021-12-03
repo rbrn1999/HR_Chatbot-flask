@@ -1,15 +1,16 @@
 from firebase_admin import firestore, initialize_app
 from datetime import datetime
 from config import companyId
+import logging
 
 class FirestoreDAO:
-    def __init__(self):
+    def __init__(self, logger=logging):
         initialize_app()
         self.__db = firestore.client()
-        
+        self.logger = logger
 # --------Member--------------
     def setMember(self, myMember):
-        myMember['role'] = 'customer'
+        myMember['role'] = 'worker'
         memberCollection = self.__db.collection("members")
         memberList = list(doc._data for doc in memberCollection.stream())
         for member in memberList:
@@ -38,8 +39,13 @@ class FirestoreDAO:
         }
 
     def updateMember(self, member):
-        doc = self.__db.document(f"members/{member['id']}")
-        doc.update(member)
+        doc_ref = self.__db.document(f"members/{member['id']}")
+        if doc_ref.get().exists:
+            doc_ref.update(member)
+            return True
+        else:
+            self.logger.info('ID NOT FOUND')
+            return False
 
     def getMembers(self, company) -> list:
         members = []
@@ -47,24 +53,41 @@ class FirestoreDAO:
             docs = self.__db.collection(f"companies/{company['companyId']}/members").stream()
             for doc in docs:
                 doc = self.__db.document(f"members/{doc.id}")
-                members.append(doc.get().to_dict())
+                member = doc.get().to_dict()
+                if member:
+                    members.append(member)
         else:
             doc = self.__db.collection('members').document(company["id"]).get()
             if doc.to_dict() != None:
                 members.append(doc.to_dict())
         return members
     
-    def addBeginOfWorkRecord(self, record, logger):
+    def getMember(self, company, memberId):
+        members = self.getMembers(company)
+        for member in members:
+            if member['id'] == memberId:
+                return member
+        self.logger.info("ID NOT FOUND")
+        return None
+
+    
+    def addBeginOfWorkRecord(self, record):
+        if record is None:
+            self.logger.info("record is None")
+            return False
+        if record['date'] == "":
+            self.logger.info("No date in record")
+            return False
         if self.getBeginOfWorkRecord(record['memberId']) is not None:
-            logger.info("already started work record in the past 20 hours")
+            self.logger.info("Already started work record in the past 20 hours")
             return False
         if self.getEndOfWorkRecord(record['memberId']):
             start = datetime.fromisoformat(self.getBeginOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
             end = datetime.fromisoformat(self.getEndOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
-            logger.info(start)
-            logger.info(end)
+            self.logger.info(start)
+            self.logger.info(end)
             if start >= end:
-                logger.info("didn't end work after starting work since last time")
+                self.logger.info("Didn't end work after starting work since last time")
                 return False
         collection = self.__db.collection("beginOfWork")
         collection.add(record)
@@ -80,17 +103,23 @@ class FirestoreDAO:
         return None
 
 
-    def addEndOfWorkRecord(self, record, logger):
+    def addEndOfWorkRecord(self, record):
+        if record is None:
+            self.logger.info("record is None")
+            return False
+        if record['date'] == "":
+            self.logger.info("No date in record")
+            return False
         if self.getBeginOfWorkRecord(record['memberId']) is None:
-            logger.info("no start work record in 20 hours")
+            self.logger.info("No start work record in 20 hours")
             return False
         if self.getEndOfWorkRecord(record['memberId']):
             start = datetime.fromisoformat(self.getBeginOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
             end = datetime.fromisoformat(self.getEndOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
-            logger.info(start)
-            logger.info(end)
+            self.logger.info(start)
+            self.logger.info(end)
             if start <= end:
-                logger.info("didn't start work after ending work since last time")
+                self.logger.info("Didn't start work after ending work since last time")
                 return False
         collection = self.__db.collection("endOfWork")
         collection.add(record)
@@ -104,3 +133,8 @@ class FirestoreDAO:
             if doc.to_dict()['memberId'] == memberId and timeDelta.seconds < 72000:
                 return doc
         return None
+
+    def addDayOffRecord(self, record):
+        collection = self.__db.collection("dayOff")
+        collection.add(record)
+        return True
