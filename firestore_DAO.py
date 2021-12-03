@@ -9,7 +9,7 @@ class FirestoreDAO:
         
 # --------Member--------------
     def setMember(self, myMember):
-        myMember['role'] = 'customer'
+        myMember['role'] = 'worker'
         memberCollection = self.__db.collection("members")
         memberList = list(doc._data for doc in memberCollection.stream())
         for member in memberList:
