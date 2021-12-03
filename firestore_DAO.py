@@ -55,8 +55,14 @@ class FirestoreDAO:
         return members
     
     def addBeginOfWorkRecord(self, record, logger):
+        if record is None:
+            logger.info("record is None")
+            return False;
+        if record['date'] == "":
+            logger.info("No date in record")
+            return False;
         if self.getBeginOfWorkRecord(record['memberId']) is not None:
-            logger.info("already started work record in the past 20 hours")
+            logger.info("Already started work record in the past 20 hours")
             return False
         if self.getEndOfWorkRecord(record['memberId']):
             start = datetime.fromisoformat(self.getBeginOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
@@ -64,7 +70,7 @@ class FirestoreDAO:
             logger.info(start)
             logger.info(end)
             if start >= end:
-                logger.info("didn't end work after starting work since last time")
+                logger.info("Didn't end work after starting work since last time")
                 return False
         collection = self.__db.collection("beginOfWork")
         collection.add(record)
@@ -81,8 +87,14 @@ class FirestoreDAO:
 
 
     def addEndOfWorkRecord(self, record, logger):
+        if record is None:
+            logger.info("record is None")
+            return False;
+        if record['date'] == "":
+            logger.info("No date in record")
+            return False;
         if self.getBeginOfWorkRecord(record['memberId']) is None:
-            logger.info("no start work record in 20 hours")
+            logger.info("No start work record in 20 hours")
             return False
         if self.getEndOfWorkRecord(record['memberId']):
             start = datetime.fromisoformat(self.getBeginOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
@@ -90,7 +102,7 @@ class FirestoreDAO:
             logger.info(start)
             logger.info(end)
             if start <= end:
-                logger.info("didn't start work after ending work since last time")
+                logger.info("Didn't start work after ending work since last time")
                 return False
         collection = self.__db.collection("endOfWork")
         collection.add(record)
