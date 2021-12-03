@@ -82,12 +82,8 @@ def leave_permission():
 
 @app.route("/submit/leave", methods=['POST'])
 def submit_leave_permission():
-    member_id = request.get_json()['memberId']
-    date = request.get_json()['date']
-    start_time = request.get_json()['startTime']
-    end_time = request.get_json()['endTime']
-    location = request.get_json()['location']
-    ask_for_leave = request.get_json()['askForLeave']
+    data = request.get_json()
+    firestoreDAO.addDayOffRecord(data)
     return ''
 
 #  ------------------------------------------------------------------------------------------ 

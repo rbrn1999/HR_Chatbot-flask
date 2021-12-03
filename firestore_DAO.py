@@ -89,10 +89,10 @@ class FirestoreDAO:
     def addEndOfWorkRecord(self, record, logger):
         if record is None:
             logger.info("record is None")
-            return False;
+            return False
         if record['date'] == "":
             logger.info("No date in record")
-            return False;
+            return False
         if self.getBeginOfWorkRecord(record['memberId']) is None:
             logger.info("No start work record in 20 hours")
             return False
@@ -116,3 +116,8 @@ class FirestoreDAO:
             if doc.to_dict()['memberId'] == memberId and timeDelta.seconds < 72000:
                 return doc
         return None
+
+    def addDayOffRecord(self, record):
+        collection = self.__db.collection("dayOff")
+        collection.add(record)
+        return True
