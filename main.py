@@ -28,9 +28,9 @@ def start_work(memberId):
     print(memberId)
     # Member ID
     member_id = memberId
-    return render_template('startWork.html', member_id=member_id)
+    return render_template('startWork.html', member_id=memberId)
 
-@app.route("/submit/start", methods=['GET', 'POST'])
+@app.route("/submit/start", methods=['POST'])
 def submit_start_work():
     data = request.get_json()
     app.logger.info(data)
@@ -48,10 +48,7 @@ def submit_start_work():
 # End Work 
 @app.route("/end_work/<memberId>", methods=['GET', 'POST'])
 def end_work(memberId):
-    # Member ID
-    member_id = memberId
-    
-    return render_template('endWork.html', member_id=member_id)
+    return render_template('endWork.html', member_id=memberId)
 
 @app.route("/submit/end", methods=['POST'])
 def submit_end_work():
@@ -71,10 +68,7 @@ def submit_end_work():
 # Leave Permission 
 @app.route("/leave_permission/<memberId>", methods=['GET', 'POST'])
 def leave_permission(memberId):
-    # Member ID
-    member_id = memberId
-    
-    return render_template('leavePermission.html', member_id=member_id)
+    return render_template('leavePermission.html', member_id=memberId)
 
 @app.route("/submit/leave", methods=['POST'])
 def submit_leave_permission():
@@ -142,12 +136,13 @@ def attendance(memberId):
 @app.route("/personal_information/<memberId>", methods=['GET', 'POST'])
 def personal_information(memberId):
     member = firestoreDAO.getMember({'companyId': config.companyId}, memberId)
-    # member = {
-    #     'name': 'Audi',
-    #     'email': 'asdas@gmail.com',
-    #     'memberId': 'sdfkadsfajsf',
-    #     'role': 'worker',
-    # }
+    member = {
+        'name': 'Audi',
+        'email': 'asdas@gmail.com',
+        'memberId': 'sdfkadsfajsf',
+        'role': 'worker',
+    }
+    
     return render_template('personalInformation.html', member=member)
 
 @app.route("/edit/<memberId>", methods=['GET', 'POST'])
@@ -173,7 +168,6 @@ def save_user_data():
 @app.route("/company_information/<memberId>", methods=['GET'])
 def company_information(memberId):
     members = firestoreDAO.getMembers({'companyId': config.companyId})
-    memberId = memberId
     member = firestoreDAO.getMember({'companyId': config.companyId}, memberId)
     role = member['role'] if member is not None else None
     # role = 'manager'

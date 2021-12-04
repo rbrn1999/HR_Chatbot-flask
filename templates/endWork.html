@@ -114,12 +114,12 @@
       contentType: "application/json;charset=utf-8",
 
       success: function () {
-        console.log('Sending data success');
-        window.location = requestUrl;
+        alert('Successfully submit your end work log');
       },
       error: function (xhr, ajaxOptions, thrownError) {
         console.log(xhr.status);
         console.log(thrownError);
+        alert('Fail submit your end work log');
       },
     });
   }
