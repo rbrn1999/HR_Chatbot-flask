@@ -141,8 +141,25 @@ def attendance(memberId):
 # Personal Information 
 @app.route("/personal_information/<memberId>", methods=['GET', 'POST'])
 def personal_information(memberId):
-    member_id = memberId
-    return render_template('personalInformation.html', memberId=member_id)
+    member = firestoreDAO.getMember({'companyId': config.companyId}, memberId)
+    # member = {
+    #     'name': 'Audi',
+    #     'email': 'asdas@gmail.com',
+    #     'memberId': 'sdfkadsfajsf',
+    #     'role': 'worker',
+    # }
+    return render_template('personalInformation.html', member=member)
+
+@app.route("/edit/<memberId>", methods=['GET', 'POST'])
+def save_user_data(memberId):
+    member = firestoreDAO.getMember({'companyId': config.companyId}, memberId)
+    # member = {
+    #     'name': 'Audi',
+    #     'email': 'asdas@gmail.com',
+    #     'memberId': 'sdfkadsfajsf',
+    #     'role': 'worker',
+    # }
+    return render_template('edit.html', member=member)
 
 @app.route("/save", methods=['POST'])
 def save_user_data():
