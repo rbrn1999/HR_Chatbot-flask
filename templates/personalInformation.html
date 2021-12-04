@@ -22,26 +22,23 @@ endblock %} {% block headContent %} {% endblock %} {% block bodyContent %}
 
 <h1 class="title">Personal Information</h1>
 <div id="message-box">
-  <form onsubmit="edit();return false;" method="POST">
-    <label class="label">
-      <div class="field form-inline">Name：{{ member['name'] }}</div>
-      <div class="field form-inline">Email：{{ member['email'] }}</div>
-      <div class="field">Id： {{ member['id'] }}</div>
-      {% if member['role'] == 'worker' %}
-        <div class="field">
-          <label for="角色" class="label">Role: Worker</label>
-        </div>
-      {% else %}
-        <div class="field">
-          <label for="角色" class="label">Role：Manager</label>
-        </div>
-      {% endif %}
-      <div class="field form-inline">
-        <button class="button is-link">Edit</button>
-        <a class="button is-link" href="" style="margin-left: 5%">Cancel</a>
+  <div>
+    <div class="field form-inline">Name：{{ member['name'] }}</div>
+    <div class="field form-inline">Email：{{ member['email'] }}</div>
+    <div class="field">Id： {{ member['id'] }}</div>
+    {% if member['role'] == 'worker' %}
+      <div class="field">
+        <label for="角色" class="label">Role: Worker</label>
       </div>
-    </label>
-  </form>
+    {% else %}
+      <div class="field">
+        <label for="角色" class="label">Role：Manager</label>
+      </div>
+    {% endif %}
+    <div class="field form-inline">
+      <button class="button is-link" onclick="edit()">Edit</button>
+    </div>
+  </div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
