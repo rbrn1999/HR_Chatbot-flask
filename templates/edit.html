@@ -33,7 +33,7 @@
         Email：<input id="email" type="email" name="email" class="label" value="{{ member['email'] }}" required />
       </div>
       <div class="field">
-        Id： {{ member['memberId'] }}
+        Id： {{ member['id'] }}
       </div>
       <div class="field">
         <label for="角色" class="label">Role：
@@ -55,10 +55,10 @@
   const emailInput = document.getElementById('email');
 
   let data = {
-    name: '',
-    email: '',
-    id: '',
-    role: '',
+    name: "{{ member['name'] }}",
+    email: "{{ member['email'] }}",
+    id: "{{ member['id'] }}",
+    role: "{{ member['role'] }}",
   }
 
   nameInput.addEventListener('change', (event) => updateValue('name', event));
@@ -72,7 +72,7 @@
   function submitData() {
     const requestUrl = '/save';
 
-    data.id = "{{ member['memberId'] }}";
+    data.id = "{{ member['id'] }}";
     data.role = $("input[name=role]:checked").val();
 
     console.log({data});

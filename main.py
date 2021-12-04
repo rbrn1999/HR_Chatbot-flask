@@ -136,12 +136,12 @@ def attendance(memberId):
 @app.route("/personal_information/<memberId>", methods=['GET', 'POST'])
 def personal_information(memberId):
     member = firestoreDAO.getMember({'companyId': config.companyId}, memberId)
-    member = {
-        'name': 'Audi',
-        'email': 'asdas@gmail.com',
-        'memberId': 'sdfkadsfajsf',
-        'role': 'worker',
-    }
+    # member = {
+    #     'name': 'Audi',
+    #     'email': 'asdas@gmail.com',
+    #     'memberId': 'sdfkadsfajsf',
+    #     'role': 'worker',
+    # }
     
     return render_template('personalInformation.html', member=member)
 
@@ -159,6 +159,7 @@ def edit_user_data(memberId):
 @app.route("/save", methods=['POST'])
 def save_user_data():
     data = request.get_json()
+    app.logger.info(data)
     firestoreDAO.updateMember(data)
     return ''
 

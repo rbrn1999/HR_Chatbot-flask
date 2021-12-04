@@ -26,7 +26,7 @@ endblock %} {% block headContent %} {% endblock %} {% block bodyContent %}
     <label class="label">
       <div class="field form-inline">Name：{{ member['name'] }}</div>
       <div class="field form-inline">Email：{{ member['email'] }}</div>
-      <div class="field">Id： {{ member['memberId'] }}</div>
+      <div class="field">Id： {{ member['id'] }}</div>
       {% if member['role'] == 'worker' %}
         <div class="field">
           <label for="角色" class="label">Role: Worker</label>
@@ -47,7 +47,7 @@ endblock %} {% block headContent %} {% endblock %} {% block bodyContent %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
   function edit() {
-    const requestUrl = "/edit/{{ member['memberId'] }}";
+    const requestUrl = "/edit/{{ member['id'] }}";
 
     window.location = requestUrl;
   }
