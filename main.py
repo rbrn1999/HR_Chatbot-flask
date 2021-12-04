@@ -146,7 +146,7 @@ def personal_information(memberId):
     return render_template('personalInformation.html', member=member)
 
 @app.route("/edit/<memberId>", methods=['GET', 'POST'])
-def save_user_data(memberId):
+def edit_user_data(memberId):
     member = firestoreDAO.getMember({'companyId': config.companyId}, memberId)
     # member = {
     #     'name': 'Audi',
