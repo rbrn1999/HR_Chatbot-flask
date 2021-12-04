@@ -158,11 +158,7 @@ def save_user_data():
 
 #  ------------------------------------------------------------------------------------------ 
   
-# Company Information 
-@app.route("/company_information/<memberId>", methods=['GET'])
-def company_information(memberId):
-    member_id = memberId
-    
+# Company Information    
 @app.route("/company_information/<memberId>", methods=['GET'])
 def company_information(memberId):
     members = firestoreDAO.getMembers({'companyId': config.companyId})
