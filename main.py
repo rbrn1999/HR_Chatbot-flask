@@ -4,16 +4,13 @@ import config
 from firestore_DAO import FirestoreDAO
 from flask import Flask, request, render_template, jsonify, redirect, url_for
 
-image_folder = os.path.join('static', 'images')
-
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = image_folder
 
 firestoreDAO = FirestoreDAO(logger=app.logger)
 
 # Member Register 
-@app.route("/register/<memberId>", methods=['POST'])
-def register():
+@app.route("/register/<Id>", methods=['POST'])
+def register(memberId):
     member_id = memberId
     memberData = request.get_json(force=True)
     member = firestoreDAO.setMember(memberData)
@@ -32,8 +29,7 @@ def start_work(memberId):
     print(memberId)
     # Member ID
     member_id = memberId
-    image = os.path.join(app.config['UPLOAD_FOLDER'], 'start-work.png')
-    return render_template('startWork.html', image=image, member_id=member_id)
+    return render_template('startWork.html', member_id=member_id)
 
 @app.route("/submit/start", methods=['GET', 'POST'])
 def submit_start_work():
@@ -56,8 +52,7 @@ def end_work(memberId):
     # Member ID
     member_id = memberId;
     
-    image = os.path.join(app.config['UPLOAD_FOLDER'], 'end-work.png')
-    return render_template('endWork.html', image=image, member_id=member_id)
+    return render_template('endWork.html', member_id=member_id)
 
 @app.route("/submit/end", methods=['POST'])
 def submit_end_work():
