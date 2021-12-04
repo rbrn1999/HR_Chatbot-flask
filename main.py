@@ -25,9 +25,6 @@ def register():
 # Start Work 
 @app.route("/start_work/<memberId>", methods=['GET', "POST"])
 def start_work(memberId):
-    print(memberId)
-    # Member ID
-    member_id = memberId
     return render_template('startWork.html', member_id=memberId)
 
 @app.route("/submit/start", methods=['POST'])
@@ -136,24 +133,11 @@ def attendance(memberId):
 @app.route("/personal_information/<memberId>", methods=['GET', 'POST'])
 def personal_information(memberId):
     member = firestoreDAO.getMember({'companyId': config.companyId}, memberId)
-    member = {
-        'name': 'Audi',
-        'email': 'asdas@gmail.com',
-        'memberId': 'sdfkadsfajsf',
-        'role': 'worker',
-    }
-    
     return render_template('personalInformation.html', member=member)
 
 @app.route("/edit/<memberId>", methods=['GET', 'POST'])
 def edit_user_data(memberId):
     member = firestoreDAO.getMember({'companyId': config.companyId}, memberId)
-    # member = {
-    #     'name': 'Audi',
-    #     'email': 'asdas@gmail.com',
-    #     'memberId': 'sdfkadsfajsf',
-    #     'role': 'worker',
-    # }
     return render_template('edit.html', member=member)
 
 @app.route("/save", methods=['POST'])

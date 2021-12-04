@@ -3,6 +3,15 @@
 {% block headContent %}
 {% endblock %}
 {% block bodyContent %}
+
+{% if member['role'] == 'worker' %}
+{% set worker_checked = 'checked' %}
+{% set manager_checked = '' %}
+{% else %}
+{% set worker_checked = '' %}
+{% set manager_checked = 'checked' %}
+{% endif %}
+
 <style>
   #message-box {
     margin: 2%;
@@ -37,13 +46,13 @@
       </div>
       <div class="field">
         <label for="角色" class="label">Role：
-          <input type="radio" name="role" value="worker" />Worker
-          <input type="radio" name="role" value="manager" />Manager
+          <input type="radio" name="role" value="worker" {{ worker_checked }} />Worker
+          <input type="radio" name="role" value="manager" {{ manager_checked }} />Manager
         </label>
       </div>
       <div class="field form-inline">
         <button class="button is-link">Save</button>
-        <a class="button is-link" href="/personal_information/{{ member['memberId'] }}" style="margin-left: 5%">Cancel</a>
+        <a class="button is-link" href="/personal_information/{{ member['id'] }}" style="margin-left: 5%">Cancel</a>
       </div>
     </label>
   </form>
@@ -55,7 +64,7 @@
   const emailInput = document.getElementById('email');
 
   let data = {
-    name: '',
+    name: "{{ member['name'] }}",
     email: '',
     id: '',
     role: '',
@@ -72,7 +81,7 @@
   function submitData() {
     const requestUrl = '/save';
 
-    data.id = "{{ member['memberId'] }}";
+    data.id = "{{ member['id'] }}";
     data.role = $("input[name=role]:checked").val();
 
     console.log({data});

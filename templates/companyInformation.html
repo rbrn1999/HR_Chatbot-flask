@@ -24,14 +24,14 @@
 
 <h1 class="title">Company Information</h1>
 <div id="message-box">
-  <div id="companyList">
+  <!-- <div id="companyList">
     <h2>Select your Company</h2>
     <select id="companySelected" style="font-size:20px;" class="custom-select">
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
     </select>
-  </div>
+  </div> -->
   <hr size="8px" align="center" width="100%">
   <div id="siteList" style="width: 100%;">
     <div class="field form-inline">
@@ -51,7 +51,7 @@
       <tbody id="memberTable">
           {% for company in companies %}
           <tr>
-            <th>{{company['member_id']}}</th>
+            <th>{{company['id']}}</th>
             <th>{{company['name']}}</th>
             <th>{{company['role']}}</th>
             {% if role == 'manager' %}
