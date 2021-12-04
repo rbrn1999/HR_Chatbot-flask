@@ -120,7 +120,7 @@ class FirestoreDAO:
             end = datetime.fromisoformat(self.getEndOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
             self.logger.info(start)
             self.logger.info(end)
-            if start <= end:
+            if start >= end:
                 self.logger.info("Didn't start work after ending work since last time")
                 return False
         collection = self.__db.collection("endOfWork")
