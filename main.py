@@ -12,9 +12,8 @@ app.config['UPLOAD_FOLDER'] = image_folder
 firestoreDAO = FirestoreDAO(logger=app.logger)
 
 # Member Register 
-@app.route("/register/<memberId>", methods=['POST'])
+@app.route("/register/", methods=['POST'])
 def register():
-    member_id = memberId
     memberData = request.get_json(force=True)
     member = firestoreDAO.setMember(memberData)
     # if "setMember" in member.keys():
