@@ -34,9 +34,6 @@
       <div id="total-time" class="field">
         Total Time：
       </div>
-      <div class="field">
-        Location：None
-      </div>
       <div class="field form-inline">
         <button class="button is-link">Submit</button>
         <a class="button is-link" href="" style="margin-left: 5%">Cancel</a>
@@ -53,13 +50,11 @@
   const totalTime = document.getElementById('total-time')
 
   let data = {
-    memberId: "{{ member['id'] }}",
+    memberId: "{{ member_id }}",
     date: '',
     startTime: '',
     endTime: '',
     totalTime: '',
-    location: '',
-    askForLeave: true,
   }
 
   dateInput.addEventListener('change', (event) => updateValue('date', event));
