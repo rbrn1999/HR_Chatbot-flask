@@ -173,6 +173,8 @@ class FirestoreDAO:
                 return False
         collection = self.__db.collection("endOfWork")
         collection.add(record)
+        start = datetime.fromisoformat(self.getBeginOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
+        end = datetime.fromisoformat(record['date'][:-1])
         workTime = (end - start).seconds 
         line = PushMessage()
         message = {
