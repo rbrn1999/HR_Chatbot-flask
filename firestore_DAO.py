@@ -1,7 +1,9 @@
 from firebase_admin import firestore, initialize_app
-from datetime import datetime
+from datetime import datetime, timedelta
 from config import companyId
 import logging
+import threading
+from lineAPI import PushMessage
 
 class FirestoreDAO:
     def __init__(self, logger=logging):
@@ -82,6 +84,16 @@ class FirestoreDAO:
             return False
         if self.getBeginOfWorkRecord(record['memberId']) is not None:
             self.logger.info("Already started work record in the past 20 hours")
+            line = PushMessage()
+            message = {
+                "lineId": self.getMembers({'id': record['memberId']})[0]['lineId'],
+                "messageType": "textTemplate",
+                "content": "上班打卡失敗\n"
+                "20小時內已經有上班的紀錄 我們是鼓勵正常作息的佛心公司\n"
+                "╰(⊙д⊙)╮    ╭(⊙д⊙)╯"
+            }
+            notificationThread = threading.Thread(target=line.pushMessage, args=(message,))
+            notificationThread.start()
             return False
         if self.getEndOfWorkRecord(record['memberId']):
             start = datetime.fromisoformat(self.getBeginOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
@@ -90,9 +102,27 @@ class FirestoreDAO:
             self.logger.info(end)
             if start >= end:
                 self.logger.info("Didn't end work after starting work since last time")
+                line = PushMessage()
+                message = {
+                    "lineId": self.getMembers({'id': record['memberId']})[0]['lineId'],
+                    "messageType": "textTemplate",
+                    "content": "上班打卡失敗\n"
+                    "你沒有下班打卡，還沒辦法上班打卡喔🤯\n"
+                }
+                notificationThread = threading.Thread(target=line.pushMessage, args=(message,))
+                notificationThread.start()
                 return False
         collection = self.__db.collection("beginOfWork")
         collection.add(record)
+        line = PushMessage()
+        message = {
+            "lineId": self.getMembers({'id': record['memberId']})[0]['lineId'],
+            "messageType": "textTemplate",
+            "content": "上班打卡成功\n"
+            "早安 人生最美的不是風景 而是每天快樂的心情🌞\n"
+        }
+        notificationThread = threading.Thread(target=line.pushMessage, args=(message,))
+        notificationThread.start()
         return True
     
     #get the (only) record of the last 20 hours
@@ -114,6 +144,15 @@ class FirestoreDAO:
             return False
         if self.getBeginOfWorkRecord(record['memberId']) is None:
             self.logger.info("No start work record in 20 hours")
+            line = PushMessage()
+            message = {
+                "lineId": self.getMembers({'id': record['memberId']})[0]['lineId'],
+                "messageType": "textTemplate",
+                "content": "下班打卡失敗\n"
+                "20小時內無上班打卡記錄，沒上班怎麼下班🧐\n"
+            }
+            notificationThread = threading.Thread(target=line.pushMessage, args=(message,))
+            notificationThread.start()
             return False
         if self.getEndOfWorkRecord(record['memberId']):
             start = datetime.fromisoformat(self.getBeginOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
@@ -122,9 +161,28 @@ class FirestoreDAO:
             self.logger.info(end)
             if start <= end:
                 self.logger.info("Didn't start work after ending work since last time")
+                line = PushMessage()
+                message = {
+                    "lineId": self.getMembers({'id': record['memberId']})[0]['lineId'],
+                    "messageType": "textTemplate",
+                    "content": "下班打卡失敗\n"
+                    "上次下班打卡後還沒上班打卡的紀錄喔😯\n"
+                }
+                notificationThread = threading.Thread(target=line.pushMessage, args=(message,))
+                notificationThread.start()
                 return False
         collection = self.__db.collection("endOfWork")
         collection.add(record)
+        workTime = (end - start).seconds 
+        line = PushMessage()
+        message = {
+            "lineId": self.getMembers({'id': record['memberId']})[0]['lineId'],
+            "messageType": "textTemplate",
+            "content": "下班打卡成功\n"
+            f"工作時間: {workTime // 60 // 60} 小時 {workTime // 60 % 60} 分鐘\n"
+        }
+        notificationThread = threading.Thread(target=line.pushMessage, args=(message,))
+        notificationThread.start()
         return True
 
     #get the (only) record of the last 20 hours

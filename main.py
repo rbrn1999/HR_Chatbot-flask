@@ -34,7 +34,7 @@ def submit_start_work():
     app.logger.info(data)
     is_valid = firestoreDAO.addBeginOfWorkRecord(data)
     
-    if (is_valid):
+    if is_valid:
         message = 'Successfully submit your start work log'
         return redirect(url_for('success', message=message))
     else:
@@ -54,7 +54,7 @@ def submit_end_work():
     app.logger.info(data)
     is_valid = firestoreDAO.addEndOfWorkRecord(data)
     
-    if (is_valid):
+    if is_valid:
         message = 'Successfully submit your end work log'
         return redirect(url_for('success', message=message))
     else:
@@ -80,14 +80,14 @@ def submit_leave_permission():
 @app.route("/attendance/<memberId>", methods=['GET'])
 def attendance(memberId):
     beginOfWork, endOfWork, dayOff = firestoreDAO.getAttendenceRecords(memberId)
-    
+    app.logger.info(f"{beginOfWork}, {endOfWork}, {dayOff}")
     starts = []
     ends = []
     
     for begin in beginOfWork:
-        iso_date = datetime.strptime(begin['date'], "%d %b %Y  %H:%M:%S.%f")
-        date = iso_date.year + '-' + iso_date.month + '-' + iso_date.day
-        time = iso_date.hour + ':' + iso_date.minute + ':' + iso_date.second
+        iso_date = datetime.fromisoformat(begin['date'][:-1]) 
+        date = iso_date.strftime("%Y-%m-%d")
+        time = iso_date.strftime("%H:%M")
         starts.append(
             {
                 "date": str(date),
@@ -98,9 +98,9 @@ def attendance(memberId):
         )
     
     for end in endOfWork:
-        iso_date = datetime.strptime(end['date'], "%d %b %Y  %H:%M:%S.%f")
-        date = iso_date.year + '-' + iso_date.month + '-' + iso_date.day
-        time = iso_date.hour + ':' + iso_date.minute + ':' + iso_date.second
+        iso_date = datetime.fromisoformat(end['date'][:-1]) 
+        date = iso_date.strftime("%Y-%m-%d")
+        time = iso_date.strftime("%H:%M")
         ends.append(
             {
                 "date": str(date),
@@ -109,50 +109,6 @@ def attendance(memberId):
                 "latitude": end['latitude'],
             }    
         )
-    # start_data = [
-    #     {
-    #         'date': '2021-06-09',
-    #         'start': '08:00',
-    #         'location': 'longitude, latitude',
-    #     },
-    #     {
-    #         'date': '2021-06-09',
-    #         'start': '08:00',
-    #         'location': 'longitude, latitude',
-    #     },
-    #     {
-    #         'date': '2021-06-09',
-    #         'start': '08:00',
-    #         'location': 'longitude, latitude',
-    #     },
-    # ]
-    # end_data = [
-    #     {
-    #         'date': '2021-06-09',
-    #         'end': '17:00',
-    #         'location': 'longitude, latitude',
-    #     },
-    #     {
-    #         'date': '2021-06-09',
-    #         'end': '17:00',
-    #         'location': 'longitude, latitude',
-    #     },
-    #     {
-    #         'date': '2021-06-09',
-    #         'end': '17:00',
-    #         'location': 'longitude, latitude',
-    #     },
-        
-    # ]
-    # leave_data = [
-    #     {
-    #         'date': '2021-06-09',
-    #         'start': '08:00',
-    #         'end': '17:00',
-    #         'location': 'none',
-    #         'ask_for_leave': 'yes',
-    #     }
-    # ]
     return render_template('attendance.html', starts=starts, ends=ends, leaves=dayOff)
 
 #  ------------------------------------------------------------------------------------------ 
@@ -183,21 +139,6 @@ def company_information(memberId):
     members = firestoreDAO.getMembers({'companyId': config.companyId})
     member = firestoreDAO.getMember({'companyId': config.companyId}, memberId)
     role = member['role'] if member is not None else None
-    # role = 'manager'
-    # fake_data = [
-    #     {
-    #        'member_id': 'qwertyuiop',
-    #        'name': 'audi',
-    #        'role': 'worker',
-    #        'salary': 180,
-    #     },
-    #     {
-    #        'member_id': 'assdfghjkl',
-    #        'name': 'john',
-    #        'role': 'manager',
-    #        'salary': 180,
-    #     }
-    # ]
     return render_template('companyInformation.html', companies=members, role=role)
 
 #  ------------------------------------------------------------------------------------------ 
