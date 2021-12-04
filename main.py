@@ -9,9 +9,8 @@ app = Flask(__name__)
 firestoreDAO = FirestoreDAO(logger=app.logger)
 
 # Member Register 
-@app.route("/register/<Id>", methods=['POST'])
-def register(memberId):
-    member_id = memberId
+@app.route("/register/", methods=['POST'])
+def register():
     memberData = request.get_json(force=True)
     member = firestoreDAO.setMember(memberData)
     # if "setMember" in member.keys():
@@ -50,7 +49,7 @@ def submit_start_work():
 @app.route("/end_work/<memberId>", methods=['GET', 'POST'])
 def end_work(memberId):
     # Member ID
-    member_id = memberId;
+    member_id = memberId
     
     return render_template('endWork.html', member_id=member_id)
 
@@ -73,7 +72,7 @@ def submit_end_work():
 @app.route("/leave_permission/<memberId>", methods=['GET', 'POST'])
 def leave_permission(memberId):
     # Member ID
-    member_id = memberId;
+    member_id = memberId
     
     return render_template('leavePermission.html', member_id=member_id)
 
@@ -87,9 +86,9 @@ def submit_leave_permission():
   
 # Attendance 
 @app.route("/attendance/<memberId>", methods=['GET'])
-def attendance():
+def attendance(memberId):
     # Member ID
-    member_id = memberId;
+    member_id = memberId
 
     start_data = [
         {
@@ -153,11 +152,7 @@ def save_user_data():
 
 #  ------------------------------------------------------------------------------------------ 
   
-# Company Information 
-@app.route("/company_information/<memberId>", methods=['GET'])
-def company_information(memberId):
-    member_id = memberId
-    
+# Company Information    
 @app.route("/company_information/<memberId>", methods=['GET'])
 def company_information(memberId):
     members = firestoreDAO.getMembers({'companyId': config.companyId})
