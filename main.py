@@ -143,6 +143,7 @@ def edit_user_data(memberId):
 @app.route("/save", methods=['POST'])
 def save_user_data():
     data = request.get_json()
+    app.logger.info(data)
     firestoreDAO.updateMember(data)
     return ''
 

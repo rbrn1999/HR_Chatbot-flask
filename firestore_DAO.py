@@ -11,6 +11,7 @@ class FirestoreDAO:
 # --------Member--------------
     def setMember(self, myMember):
         myMember['role'] = 'worker'
+        myMember['salary'] = 180
         memberCollection = self.__db.collection("members")
         memberList = list(doc._data for doc in memberCollection.stream())
         for member in memberList:
@@ -35,6 +36,7 @@ class FirestoreDAO:
             "name": myMember['name'],
             "lineId": myMember['lineId'],
             "id": memberId,
+            "salary": myMember['salary'],
             "setMember": True
         }
 
