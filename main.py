@@ -92,7 +92,7 @@ def submit_leave_permission():
   
 # Attendance 
 @app.route("/attendance/<memberId>", methods=['GET'])
-def attendance():
+def attendance(memberId):
     # Member ID
     member_id = memberId
 
