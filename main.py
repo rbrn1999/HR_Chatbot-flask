@@ -142,7 +142,7 @@ def attendance(memberId):
 @app.route("/personal_information/<memberId>", methods=['GET', 'POST'])
 def personal_information(memberId):
     member_id = memberId
-    return render_template('personalInformation.html')
+    return render_template('personalInformation.html', memberId=member_id)
 
 @app.route("/save", methods=['POST'])
 def save_user_data():
@@ -159,22 +159,22 @@ def company_information(memberId):
     memberId = memberId
     member = firestoreDAO.getMember({'companyId': config.companyId}, memberId)
     role = member['role'] if member is not None else None
-    role = 'manager'
-    fake_data = [
-        {
-           'member_id': 'qwertyuiop',
-           'name': 'audi',
-           'role': 'worker',
-           'salary': 180,
-        },
-        {
-           'member_id': 'assdfghjkl',
-           'name': 'john',
-           'role': 'manager',
-           'salary': 180,
-        }
-    ]
-    return render_template('companyInformation.html', companies=fake_data, role=role)
+    # role = 'manager'
+    # fake_data = [
+    #     {
+    #        'member_id': 'qwertyuiop',
+    #        'name': 'audi',
+    #        'role': 'worker',
+    #        'salary': 180,
+    #     },
+    #     {
+    #        'member_id': 'assdfghjkl',
+    #        'name': 'john',
+    #        'role': 'manager',
+    #        'salary': 180,
+    #     }
+    # ]
+    return render_template('companyInformation.html', companies=members, role=role)
 
 #  ------------------------------------------------------------------------------------------ 
 
