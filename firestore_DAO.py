@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from config import companyId
 import logging
 import threading
-from lineAPI import PushMessage
+from line_api import PushMessage
 
 class FirestoreDAO:
     def __init__(self, logger=logging):
