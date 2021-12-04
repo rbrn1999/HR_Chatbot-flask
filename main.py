@@ -54,7 +54,7 @@ def submit_start_work():
 @app.route("/end_work/<memberId>", methods=['GET', 'POST'])
 def end_work(memberId):
     # Member ID
-    member_id = memberId;
+    member_id = memberId
     
     image = os.path.join(app.config['UPLOAD_FOLDER'], 'end-work.png')
     return render_template('endWork.html', image=image, member_id=member_id)
@@ -78,7 +78,7 @@ def submit_end_work():
 @app.route("/leave_permission/<memberId>", methods=['GET', 'POST'])
 def leave_permission(memberId):
     # Member ID
-    member_id = memberId;
+    member_id = memberId
     
     return render_template('leavePermission.html', member_id=member_id)
 
@@ -94,7 +94,7 @@ def submit_leave_permission():
 @app.route("/attendance/<memberId>", methods=['GET'])
 def attendance():
     # Member ID
-    member_id = memberId;
+    member_id = memberId
 
     start_data = [
         {
