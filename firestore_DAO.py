@@ -140,3 +140,12 @@ class FirestoreDAO:
         collection = self.__db.collection("dayOff")
         collection.add(record)
         return True
+
+    def getAttendenceRecords(self, memberId):
+        collection = self.__db.collection("beginOfWork")
+        beginOfWork = [doc.to_dict() for doc in collection.stream() if doc.to_dict()['memberId'] == memberId]
+        collection = self.__db.collection("endOfWork")
+        endOfWork = [doc.to_dict() for doc in collection.stream() if doc.to_dict()['memberId'] == memberId]
+        collection = self.__db.collection("dayOff")
+        dayOff = [doc.to_dict() for doc in collection.stream() if doc.to_dict()['memberId'] == memberId]
+        return (beginOfWork, endOfWork, dayOff)

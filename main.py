@@ -82,8 +82,7 @@ def submit_leave_permission():
 @app.route("/attendance/<memberId>", methods=['GET'])
 def attendance(memberId):
     # Member ID
-    member_id = memberId
-
+    app.logger.info(firestoreDAO.getAttendenceRecords(memberId))
     start_data = [
         {
             'date': '2021-06-09',
