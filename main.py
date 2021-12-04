@@ -54,7 +54,7 @@ def end_work(memberId):
 def submit_end_work():
     data = request.get_json()
     app.logger.info(data)
-    is_valid = firestoreDAO.addBeginOfWorkRecord(data)
+    is_valid = firestoreDAO.addEndOfWorkRecord(data)
     
     if (is_valid):
         message = 'Successfully submit your end work log'
