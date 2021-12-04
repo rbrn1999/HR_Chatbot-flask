@@ -32,8 +32,8 @@
       {% for start in starts %}
         <label class="label">
           Date : {{ start['date'] }}<br>
-          Start Time : {{ start['start'] }}<br>
-          Location： {{ start['location'] }}<br>
+          Start Time : {{ start['time'] }}<br>
+          Location： {{ start['longitude'] }}, {{ start['latitude'] }}<br>
         </label>
       {% endfor %}
       </label>
@@ -43,8 +43,8 @@
       {% for end in ends %}
         <label class="label">
           Date : {{ end['date'] }}<br>
-          End Time : {{ end['end'] }}<br>
-          Location： {{ end['location'] }}<br>
+          End Time : {{ end['time'] }}<br>
+          Location： {{ end['longitude'] }}, {{ end['latitude'] }<br>
         </label>
       {% endfor %}
       </label>
@@ -54,11 +54,9 @@
       {% for leave in leaves %}
         <label class="label">
           Date : {{ leave['date'] }}<br>
-          Start Time : {{ leave['start'] }}<br>
-          End Time : {{ leave['end'] }}<br>
-          Work Time : {{ leave['total_time'] }}<br>
-          Location： {{ leave['location'] }}<br>
-          Ask for Leave: {{ leave['ask_for_leave'] }}<br>
+          Start Time : {{ leave['startTime'] }}<br>
+          End Time : {{ leave['endTime'] }}<br>
+          Work Time : {{ leave['totalTime'] }}<br>
         </label>
       {% endfor %}
       </label>

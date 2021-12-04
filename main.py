@@ -1,5 +1,6 @@
 import os
 import config
+from datetime import datetime
 # from line_api import PushMessage
 from firestore_DAO import FirestoreDAO
 from flask import Flask, request, render_template, jsonify, redirect, url_for
@@ -78,53 +79,81 @@ def submit_leave_permission():
 # Attendance 
 @app.route("/attendance/<memberId>", methods=['GET'])
 def attendance(memberId):
-
     beginOfWork, endOfWork, dayOff = firestoreDAO.getAttendenceRecords(memberId)
-    start_data = [
-        {
-            'date': '2021-06-09',
-            'start': '08:00',
-            'location': 'longitude, latitude',
-        },
-        {
-            'date': '2021-06-09',
-            'start': '08:00',
-            'location': 'longitude, latitude',
-        },
-        {
-            'date': '2021-06-09',
-            'start': '08:00',
-            'location': 'longitude, latitude',
-        },
-    ]
-    end_data = [
-        {
-            'date': '2021-06-09',
-            'end': '17:00',
-            'location': 'longitude, latitude',
-        },
-        {
-            'date': '2021-06-09',
-            'end': '17:00',
-            'location': 'longitude, latitude',
-        },
-        {
-            'date': '2021-06-09',
-            'end': '17:00',
-            'location': 'longitude, latitude',
-        },
+    
+    starts = []
+    ends = []
+    
+    for begin in beginOfWork:
+        iso_date = datetime.strptime(begin['date'], "%d %b %Y  %H:%M:%S.%f")
+        date = iso_date.year + '-' + iso_date.month + '-' + iso_date.day
+        time = iso_date.hour + ':' + iso_date.minute + ':' + iso_date.second
+        starts.append(
+            {
+                "date": str(date),
+                "time": str(time),
+                "longitude": begin['longitude'],
+                "latitude": begin['latitude'],
+            }    
+        )
+    
+    for end in endOfWork:
+        iso_date = datetime.strptime(end['date'], "%d %b %Y  %H:%M:%S.%f")
+        date = iso_date.year + '-' + iso_date.month + '-' + iso_date.day
+        time = iso_date.hour + ':' + iso_date.minute + ':' + iso_date.second
+        ends.append(
+            {
+                "date": str(date),
+                "time": str(time),
+                "longitude": end['longitude'],
+                "latitude": end['latitude'],
+            }    
+        )
+    # start_data = [
+    #     {
+    #         'date': '2021-06-09',
+    #         'start': '08:00',
+    #         'location': 'longitude, latitude',
+    #     },
+    #     {
+    #         'date': '2021-06-09',
+    #         'start': '08:00',
+    #         'location': 'longitude, latitude',
+    #     },
+    #     {
+    #         'date': '2021-06-09',
+    #         'start': '08:00',
+    #         'location': 'longitude, latitude',
+    #     },
+    # ]
+    # end_data = [
+    #     {
+    #         'date': '2021-06-09',
+    #         'end': '17:00',
+    #         'location': 'longitude, latitude',
+    #     },
+    #     {
+    #         'date': '2021-06-09',
+    #         'end': '17:00',
+    #         'location': 'longitude, latitude',
+    #     },
+    #     {
+    #         'date': '2021-06-09',
+    #         'end': '17:00',
+    #         'location': 'longitude, latitude',
+    #     },
         
-    ]
-    leave_data = [
-        {
-            'date': '2021-06-09',
-            'start': '08:00',
-            'end': '17:00',
-            'location': 'none',
-            'ask_for_leave': 'yes',
-        }
-    ]
-    return render_template('attendance.html', starts=start_data, ends=end_data, leaves=leave_data)
+    # ]
+    # leave_data = [
+    #     {
+    #         'date': '2021-06-09',
+    #         'start': '08:00',
+    #         'end': '17:00',
+    #         'location': 'none',
+    #         'ask_for_leave': 'yes',
+    #     }
+    # ]
+    return render_template('attendance.html', starts=starts, ends=ends, leaves=dayOff)
 
 #  ------------------------------------------------------------------------------------------ 
 
