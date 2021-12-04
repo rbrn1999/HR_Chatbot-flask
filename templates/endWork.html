@@ -90,6 +90,8 @@
     ${date.getDate()}`;
     let currentTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 
+    data.date = date.toISOString();
+    
     dateText.innerHTML = `Date: ${currentDate} <br>Time: ${currentTime}`;
   }
 
