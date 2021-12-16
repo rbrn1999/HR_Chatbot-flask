@@ -10,6 +10,20 @@ class FirestoreDAO:
         initialize_app()
         self.__db = firestore.client()
         self.logger = logger
+
+    def getCompanies(self, company=None) -> list:
+        companies = []
+        if company:
+            doc = self.__db.document(f"companies/{company['companyId']}")
+            companies.append(doc.get().to_dict())
+        else:
+            docs = self.__db.collection("companies").stream()
+            siteIdOfName = {}
+            for doc in docs:
+                siteIdOfName[doc.id] = doc._data['name']
+                companies.append({"id": doc.id, "name": doc.to_dict()['name']})
+        return companies
+        
 # --------Member--------------
     def setMember(self, myMember):
         myMember['role'] = 'worker'
