@@ -95,23 +95,6 @@ class FirestoreDAO:
             notificationThread = threading.Thread(target=line.pushMessage, args=(message,))
             notificationThread.start()
             return False
-        if self.getEndOfWorkRecord(record['memberId']):
-            start = datetime.fromisoformat(self.getBeginOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
-            end = datetime.fromisoformat(self.getEndOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
-            self.logger.info(start)
-            self.logger.info(end)
-            if start >= end:
-                self.logger.info("Didn't end work after starting work since last time")
-                line = PushMessage()
-                message = {
-                    "lineId": self.getMembers({'id': record['memberId']})[0]['lineId'],
-                    "messageType": "textTemplate",
-                    "content": "上班打卡失敗\n"
-                    "你沒有下班打卡，還沒辦法上班打卡喔🤯\n"
-                }
-                notificationThread = threading.Thread(target=line.pushMessage, args=(message,))
-                notificationThread.start()
-                return False
         collection = self.__db.collection("beginOfWork")
         collection.add(record)
         line = PushMessage()
