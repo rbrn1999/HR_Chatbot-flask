@@ -150,7 +150,7 @@ class FirestoreDAO:
             }
             notificationThread = threading.Thread(target=line.pushMessage, args=(message,))
             notificationThread.start()
-            return False
+            return -1
         if self.getEndOfWorkRecord(record['memberId']):
             start = datetime.fromisoformat(self.getBeginOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
             end = datetime.fromisoformat(self.getEndOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
@@ -167,7 +167,7 @@ class FirestoreDAO:
                 }
                 notificationThread = threading.Thread(target=line.pushMessage, args=(message,))
                 notificationThread.start()
-                return False
+                return -1
         collection = self.__db.collection("endOfWork")
         collection.add(record)
         start = datetime.fromisoformat(self.getBeginOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
@@ -178,11 +178,11 @@ class FirestoreDAO:
             "lineId": self.getMembers({'id': record['memberId']})[0]['lineId'],
             "messageType": "textTemplate",
             "content": "下班打卡成功\n"
-            f"工作時間: {workTime // 60 // 60} 小時 {workTime // 60 % 60} 分鐘\n"
+            f"工作時間: {int(workTime // 60 // 60)} 小時 {int(workTime // 60 % 60)} 分鐘\n"
         }
         notificationThread = threading.Thread(target=line.pushMessage, args=(message,))
         notificationThread.start()
-        return True
+        return int(workTime)
 
     #get the (only) record of the last 20 hours
     def getEndOfWorkRecord(self, memberId):
