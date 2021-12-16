@@ -127,7 +127,7 @@ class FirestoreDAO:
         collection = self.__db.collection("beginOfWork")
         for doc in collection.stream():
             timeDelta = datetime.now() - datetime.fromisoformat(doc.to_dict()['date'][:-1]) #exclude the 'Z' in the end before formatting 
-            if doc.to_dict()['memberId'] == memberId and timeDelta.seconds < 72000:
+            if doc.to_dict()['memberId'] == memberId and timeDelta.total_seconds() < 72000:
                 return doc
         return None
 
