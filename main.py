@@ -2,6 +2,7 @@ import os
 import config
 from datetime import datetime
 # from line_api import PushMessage
+from publish import publish_messages
 from firestore_DAO import FirestoreDAO
 from flask import Flask, request, render_template, jsonify, redirect, url_for
 
