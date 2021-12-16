@@ -172,7 +172,7 @@ class FirestoreDAO:
         collection.add(record)
         start = datetime.fromisoformat(self.getBeginOfWorkRecord(record['memberId']).to_dict()['date'][:-1])
         end = datetime.fromisoformat(record['date'][:-1])
-        workTime = (end - start).seconds 
+        workTime = (end - start).total_seconds()
         line = PushMessage()
         message = {
             "lineId": self.getMembers({'id': record['memberId']})[0]['lineId'],
@@ -189,7 +189,7 @@ class FirestoreDAO:
         collection = self.__db.collection("endOfWork")
         for doc in collection.stream():
             timeDelta = datetime.now() - datetime.fromisoformat(doc.to_dict()['date'][:-1]) 
-            if doc.to_dict()['memberId'] == memberId and timeDelta.seconds < 72000:
+            if doc.to_dict()['memberId'] == memberId and timeDelta.total_seconds() < 72000:
                 return doc
         return None
 
