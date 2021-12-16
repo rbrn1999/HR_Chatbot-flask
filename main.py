@@ -5,6 +5,9 @@ from datetime import datetime
 from publish import publish_messages
 from firestore_DAO import FirestoreDAO
 from flask import Flask, request, render_template, jsonify, redirect, url_for
+import threading
+from datetime import datetime
+from time import time
 
 app = Flask(__name__)
 
@@ -36,6 +39,14 @@ def submit_start_work():
     is_valid = firestoreDAO.addBeginOfWorkRecord(data)
     
     if is_valid:
+        record = {
+            'companyName': firestoreDAO.getCompanies({'companyId': config.companyId})[0]['name'],
+            'memberId': data['memberId'],
+            'location': f"{data['longitude']}, {data['latitude']}",
+            'timestamp': datetime.utcfromtimestamp(time()+28800).strftime('%Y-%m-%d %H:%M:%S')
+        }
+        publishThread = threading.Thread(target=publish_messages, args=({'startRecord': record},))
+        publishThread.start()
         message = 'Successfully submit your start work log'
         return redirect(url_for('success', message=message))
     else:
@@ -53,9 +64,18 @@ def end_work(memberId):
 def submit_end_work():
     data = request.get_json()
     app.logger.info(data)
-    is_valid = firestoreDAO.addEndOfWorkRecord(data)
+    workTime = firestoreDAO.addEndOfWorkRecord(data)
     
-    if is_valid:
+    if workTime > 0:
+        record = {
+            'companyName': firestoreDAO.getCompanies({'companyId': config.companyId})[0]['name'],
+            'memberId': data['memberId'],
+            'location': f"{data['longitude']}, {data['latitude']}",
+            'timestamp': datetime.utcfromtimestamp(time()+28800).strftime('%Y-%m-%d %H:%M:%S'),
+            'workTime': workTime
+        }
+        publishThread = threading.Thread(target=publish_messages, args=({'endRecord': record},))
+        publishThread.start()
         message = 'Successfully submit your end work log'
         return redirect(url_for('success', message=message))
     else:
