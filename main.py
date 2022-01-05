@@ -13,6 +13,37 @@ app = Flask(__name__)
 
 firestoreDAO = FirestoreDAO(logger=app.logger)
 
+# Index
+@app.route("/", methods=['GET'])
+def index():
+    return render_template("index.html", liffId = liffId)
+
+#  ------------------------------------------------------------------------------------------ 
+
+# Sign Up 
+@app.route("/signUp", methods=['GET', 'POST'])
+def signUp():
+    if request.method == 'GET':
+        return render_template("signUp.html",liffId = liffId)
+    if request.method == 'POST':
+        try:
+            return render_template("success.html", message="註冊成功")
+        except:
+            return render_template("error.html", message="註冊失敗") 
+
+#  ------------------------------------------------------------------------------------------ 
+
+# Binding 
+@app.route("/binding", methods=['GET', 'POST'])
+def binding():
+    if request.method == 'GET':
+        return render_template("binding.html",member = member,liffId = liffId)
+    elif request.method == 'POST':
+        return redirect(url_for('index'))
+    
+#  ------------------------------------------------------------------------------------------ 
+
+
 # Member Register 
 @app.route("/register/", methods=['POST'])
 def register():
