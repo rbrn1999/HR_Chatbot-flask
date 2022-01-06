@@ -12,7 +12,9 @@
                 .then(profile => {
 
                     const lineId = profile.userId;
+                    const displayName = profile.displayName;
                     document.getElementById("lineId").value = lineId;
+                    document.getElementById("user-name").value = displayName;
                 })
                 .catch((err) => {
                     console.log('error', err);
@@ -26,15 +28,17 @@
 <form action="" method="POST">
     <label class="label">
         <div class="field form-inline">
-            姓名：&ensp;<input type="text" class="label" name="name" class="input" required="required" />
+            姓名:&ensp;<input type="text" class="label" name="name" id="user-name" class="input" required="required" />
         </div>
         <div class="field form-inline">
-            email： <input type="text" class="label" name="email" class="input" required="required" />
+            email: <input type="text" class="label" name="email" class="input" required="required" />
         </div>
         <div class="field form-inline">
-            密碼：&ensp;<input type="password" class="label" name="password" class="input" required="required" />
+            密碼:&ensp;<input type="password" class="label" name="password" class="input" required="required" />
         </div>
-        <input type="hidden" name="lineId" id='lineId' class="input" required="required" />
+        <div class="field form-inline">     
+            Line ID: <input type="text" name="lineId" id='lineId' class="input" required="required" readonly/>
+        </div>
 
         <div class="field form-inline">
             <button class="button is-link">註冊</button>
