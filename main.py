@@ -1,8 +1,8 @@
 import os
-import config
+from config import companyId, liffId
 from datetime import datetime
 # from line_api import PushMessage
-from publish import publish_messages
+# from publish import publish_messages
 from firestore_DAO import FirestoreDAO
 from flask import Flask, request, render_template, jsonify, redirect, url_for
 import threading
@@ -51,7 +51,7 @@ def register():
     member = firestoreDAO.setMember(memberData)
     # if "setMember" in member.keys():
     #     # - pubsub
-    #     member["companyName"] = firestoreDAO.getCompanies({'companyId': config.companyId})[0]['name']
+    #     member["companyName"] = firestoreDAO.getCompanies({'companyId': companyId})[0]['name']
     #     publishThread = threading.Thread(target=publish_messages, args=({"member" : member},))
     #     publishThread.start()
     return jsonify(member)
@@ -71,13 +71,13 @@ def submit_start_work():
     
     if is_valid:
         record = {
-            'companyName': firestoreDAO.getCompanies({'companyId': config.companyId})[0]['name'],
+            'companyName': firestoreDAO.getCompanies({'companyId': companyId})[0]['name'],
             'memberId': data['memberId'],
             'location': f"{data['longitude']}, {data['latitude']}",
             'timestamp': datetime.utcfromtimestamp(time()+28800).strftime('%Y-%m-%d %H:%M:%S')
         }
-        publishThread = threading.Thread(target=publish_messages, args=({'startRecord': record},))
-        publishThread.start()
+        # publishThread = threading.Thread(target=publish_messages, args=({'startRecord': record},))
+        # publishThread.start()
         message = 'Successfully submit your start work log'
         return redirect(url_for('success', message=message))
     else:
@@ -99,14 +99,14 @@ def submit_end_work():
     
     if workTime > 0:
         record = {
-            'companyName': firestoreDAO.getCompanies({'companyId': config.companyId})[0]['name'],
+            'companyName': firestoreDAO.getCompanies({'companyId': companyId})[0]['name'],
             'memberId': data['memberId'],
             'location': f"{data['longitude']}, {data['latitude']}",
             'timestamp': datetime.utcfromtimestamp(time()+28800).strftime('%Y-%m-%d %H:%M:%S'),
             'workTime': workTime
         }
-        publishThread = threading.Thread(target=publish_messages, args=({'endRecord': record},))
-        publishThread.start()
+        # publishThread = threading.Thread(target=publish_messages, args=({'endRecord': record},))
+        # publishThread.start()
         message = 'Successfully submit your end work log'
         return redirect(url_for('success', message=message))
     else:
@@ -168,12 +168,12 @@ def attendance(memberId):
 # Personal Information 
 @app.route("/personal_information/<memberId>", methods=['GET', 'POST'])
 def personal_information(memberId):
-    member = firestoreDAO.getMember({'companyId': config.companyId}, memberId)
+    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
     return render_template('personalInformation.html', member=member)
 
 @app.route("/edit/<memberId>", methods=['GET', 'POST'])
 def edit_user_data(memberId):
-    member = firestoreDAO.getMember({'companyId': config.companyId}, memberId)
+    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
     return render_template('edit.html', member=member)
 
 @app.route("/save", methods=['POST'])
@@ -188,8 +188,8 @@ def save_user_data():
 # Company Information    
 @app.route("/company_information/<memberId>", methods=['GET'])
 def company_information(memberId):
-    members = firestoreDAO.getMembers({'companyId': config.companyId})
-    member = firestoreDAO.getMember({'companyId': config.companyId}, memberId)
+    members = firestoreDAO.getMembers({'companyId': companyId})
+    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
     role = member['role'] if member is not None else None
     return render_template('companyInformation.html', companies=members, role=role)
 
