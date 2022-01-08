@@ -3,11 +3,16 @@
 {% block headContent %}
 {% endblock %}
 {% block bodyContent %}
-
+{% if member['role'] == 'admin' %}
+{% set admin_checked = 'checked' %}
+{% set manager_checked = '' %}
+{% set worker_checked = '' %}
 {% if member['role'] == 'worker' %}
+{% set admin_checked = '' %}
 {% set worker_checked = 'checked' %}
 {% set manager_checked = '' %}
-{% else %}
+{% if member['role'] == 'manager' %}
+{% set admin_checked = '' %}
 {% set worker_checked = '' %}
 {% set manager_checked = 'checked' %}
 {% endif %}
@@ -48,6 +53,7 @@
         <label for="角色" class="label">Role：
           <input type="radio" name="role" value="worker" {{ worker_checked }} />Worker
           <input type="radio" name="role" value="manager" {{ manager_checked }} />Manager
+          <input type="radio" name="role" value="admin" {{ manager_checked }} />Admin
         </label>
       </div>
       <div class="field form-inline">
