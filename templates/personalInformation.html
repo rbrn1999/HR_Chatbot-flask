@@ -30,10 +30,14 @@ endblock %} {% block headContent %} {% endblock %} {% block bodyContent %}
       <div class="field">
         <label for="角色" class="label">Role: Worker</label>
       </div>
-    {% else %}
+    {% elif member['role'] == 'manager' %}
       <div class="field">
         <label for="角色" class="label">Role：Manager</label>
       </div>
+    {% elif member['role'] == 'admin' %}
+    <div class="field">
+      <label for="角色" class="label">Role：Admin</label>
+    </div>
     {% endif %}
     <div class="field form-inline">
       <button class="button is-link" onclick="edit()">Edit</button>
@@ -44,7 +48,7 @@ endblock %} {% block headContent %} {% endblock %} {% block bodyContent %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
   function edit() {
-    const requestUrl = "/edit/{{ member['id'] }}";
+    const requestUrl = "/edit/";
 
     window.location = requestUrl;
   }

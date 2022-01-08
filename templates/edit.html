@@ -7,11 +7,11 @@
 {% set admin_checked = 'checked' %}
 {% set manager_checked = '' %}
 {% set worker_checked = '' %}
-{% if member['role'] == 'worker' %}
+{% elif member['role'] == 'worker' %}
 {% set admin_checked = '' %}
 {% set worker_checked = 'checked' %}
 {% set manager_checked = '' %}
-{% if member['role'] == 'manager' %}
+{% elif member['role'] == 'manager' %}
 {% set admin_checked = '' %}
 {% set worker_checked = '' %}
 {% set manager_checked = 'checked' %}
@@ -100,6 +100,7 @@
 
       success: function () {
         console.log('Sending data success');
+        alert("change saved.")
       },
       error: function (xhr, ajaxOptions, thrownError) {
         console.log(xhr.status);

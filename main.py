@@ -20,6 +20,16 @@ user = {"is_logged_in": False, "id": "", "role": ""}
 def index():
     if request.method == 'GET':
         app.logger.info(user)
+        member = firestoreDAO.getMember({'companyId': companyId}, user['id'])
+        if member:
+            user['is_logged_in'] = True
+            user['id'] = member['id']
+            user['role'] = member['role']
+            app.logger.info(user)
+        else:
+            user['is_logged_in'] = False
+            user['id'] = ""
+            user['role'] = ""
         return render_template("index.html", liffId = liffId)
     if request.method == 'POST':
         memberId = request.get_json(force=True)['id']
@@ -62,16 +72,6 @@ def login():
             return render_template("error.html", message="登入失敗") 
 
 #  ------------------------------------------------------------------------------------------ 
-# Binding 
-@app.route("/binding", methods=['GET', 'POST'])
-def binding():
-    if request.method == 'GET':
-        return render_template("binding.html",member = member,liffId = liffId)
-    elif request.method == 'POST':
-        return redirect(url_for('index'))
-    
-#  ------------------------------------------------------------------------------------------ 
-
 
 # Member Register 
 @app.route("/register/", methods=['POST'])
@@ -89,15 +89,8 @@ def register():
    
 # Start Work 
 @app.route("/start_work/", methods=['GET', "POST"])
-def start_work(memberId):
-    memberId = request.get_json(force=True)['id']
-    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
-    if member:
-        user['is_logged_in'] = True
-        user['id'] = member['id']
-        user['role'] = member['role']
-        app.logger.info(user)
-        
+def start_work():
+    if user['is_logged_in']:
         if user['role'] == 'worker' or user['role'] == 'manager':
             return render_template('startWork.html', member_id=user['id'])
         else:
@@ -105,9 +98,6 @@ def start_work(memberId):
             return redirect(url_for('error', message=message))
   
     else:
-        user['is_logged_in'] = False
-        user['id'] = ""
-        user['role'] = ""
         message = 'You are not logged in'
         return redirect(url_for('error', message=message))
 
@@ -136,15 +126,9 @@ def submit_start_work():
   
 # End Work 
 @app.route("/end_work/", methods=['GET', 'POST'])
-def end_work(memberId):
-    memberId = request.get_json(force=True)['id']
-    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
-    if member:
-        user['is_logged_in'] = True
-        user['id'] = member['id']
-        user['role'] = member['role']
-        app.logger.info(user)
-        
+def end_work():
+  
+    if user['is_logged_in']:
         if user['role'] == 'worker' or user['role'] == 'manager':
             return render_template('endWork.html', member_id=user['id'])
         else:
@@ -184,13 +168,9 @@ def submit_end_work():
  
 # Leave Permission 
 @app.route("/leave_permission/", methods=['GET', 'POST'])
-def leave_permission(memberId):
-    memberId = request.get_json(force=True)['id']
-    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
-    if member:
-        user['is_logged_in'] = True
-        user['id'] = member['id']
-        user['role'] = member['role']
+def leave_permission():
+    
+    if user['is_logged_in']:
         app.logger.info(user)
         
         if user['role'] == 'worker' or user['role'] == 'manager':
@@ -200,9 +180,6 @@ def leave_permission(memberId):
             return redirect(url_for('error', message=message))
   
     else:
-        user['is_logged_in'] = False
-        user['id'] = ""
-        user['role'] = ""
         message = 'You are not logged in'
         return redirect(url_for('error', message=message))
 
@@ -216,8 +193,8 @@ def submit_leave_permission():
   
 # Attendance 
 @app.route("/attendance/", methods=['GET'])
-def attendance(memberId):
-    beginOfWork, endOfWork, dayOff = firestoreDAO.getAttendenceRecords(memberId)
+def attendance():
+    beginOfWork, endOfWork, dayOff = firestoreDAO.getAttendenceRecords(user['id'])
     app.logger.info(f"{beginOfWork}, {endOfWork}, {dayOff}")
     starts = []
     ends = []
@@ -247,26 +224,17 @@ def attendance(memberId):
                 "latitude": end['latitude'],
             }    
         )
-
-    memberId = request.get_json(force=True)['id']
-    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
     
-    if member:
-        user['is_logged_in'] = True
-        user['id'] = member['id']
-        user['role'] = member['role']
+    if user['id']:
         app.logger.info(user)
         
         if user['role'] == 'worker' or user['role'] == 'manager':
-            render_template('attendance.html', starts=starts, ends=ends, leaves=dayOff)
+            return render_template('attendance.html', starts=starts, ends=ends, leaves=dayOff)
         else:
             message = '401 Unauthorized, Access Denied'
             return redirect(url_for('error', message=message))
   
     else:
-        user['is_logged_in'] = False
-        user['id'] = ""
-        user['role'] = ""
         message = 'You are not logged in'
         return redirect(url_for('error', message=message))
 
@@ -274,29 +242,21 @@ def attendance(memberId):
 
 # Personal Information 
 @app.route("/personal_information/", methods=['GET', 'POST'])
-def personal_information(memberId):
-    memberId = request.get_json(force=True)['id']
-    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
+def personal_information():
     
-    if member:
-        user['is_logged_in'] = True
-        user['id'] = member['id']
-        user['role'] = member['role']
+    if user['is_logged_in']:
+        member = firestoreDAO.getMember({'companyId': companyId}, user['id'])
         app.logger.info(user)
         return render_template('personalInformation.html', member=member)
     else:
-        user['is_logged_in'] = False
-        user['id'] = ""
-        user['role'] = ""
         message = 'You are not logged in'
         return redirect(url_for('error', message=message))
     
     
 
 @app.route("/edit/", methods=['GET', 'POST'])
-def edit_user_data(memberId):
-    memberId = request.get_json(force=True)['id']
-    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
+def edit_user_data():
+    member = firestoreDAO.getMember({'companyId': companyId}, user['id'])
     return render_template('edit.html', member=member)
 
 @app.route("/save", methods=['POST'])
@@ -310,17 +270,11 @@ def save_user_data():
   
 # Company Information    
 @app.route("/company_information/", methods=['GET'])
-def company_information(memberId):
-    memberId = request.get_json(force=True)['id']
+def company_information():
     members = firestoreDAO.getMembers({'companyId': companyId})
-    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
+    member = firestoreDAO.getMember({'companyId': companyId}, user['id'])
     
-    if member:
-        user['is_logged_in'] = True
-        user['id'] = member['id']
-        user['role'] = member['role']
-        app.logger.info(user)
-        
+    if user['is_logged_in']:
         if user['role'] == 'admin':
             return render_template('companyInformation.html', companies=members)
         else:
@@ -328,9 +282,6 @@ def company_information(memberId):
             return redirect(url_for('error', message=message))
 
     else:
-        user['is_logged_in'] = False
-        user['id'] = ""
-        user['role'] = ""
         message = 'You are not logged in'
         return redirect(url_for('error', message=message))
     # return render_template('companyInformation.html', companies=members, role=role)
@@ -339,22 +290,16 @@ def company_information(memberId):
 
 # Report 
 @app.route("/report/", methods=['GET'])
-def report(memberId):
-    memberId = request.get_json(force=True)['id']
-    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
-    
-    if member:
-        user['is_logged_in'] = True
-        user['id'] = member['id']
-        user['role'] = member['role']
-        app.logger.info(user)
-        
-        if user['role'] == 'manager' or user['role'] == 'admin':
-            manager_report_url = ''
+def report():
+
+    if user['is_logged_in']:
+
+        if user['role'] == 'manager' or user['role'] == 'admin' or user['role'] == 'worker':
+            manager_report_url = 'https://datastudio.google.com/embed/reporting/d2c6b151-2e88-4e72-ab92-3a9b842001a4/page/p_veujwqbxqc'
             return render_template('report.html', report_url=manager_report_url)
-        if user['role'] == 'worker':
-            worker_report_url = ''
-            return render_template('report.html', report_url=worker_report_url)
+        # if user['role'] == 'worker':
+        #     worker_report_url = ''
+        #     return render_template('report.html', report_url=worker_report_url)
 
     else:
         user['is_logged_in'] = False

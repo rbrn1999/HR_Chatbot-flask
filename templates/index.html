@@ -76,6 +76,9 @@
                 <li class="nav-item">
                     <a class="nav-link" id="sign-out">會員登出</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="refresh">刷新狀態</a>
+                </li>
             </ul>
         </div>
     </nav>
@@ -85,26 +88,32 @@
             <h1 style="font-weight:bold;padding-top: 10%">人資系統</h1>
         </div>
         <div style="margin: 10% auto">
-            <a class="btn btn-primary" href="/startWork">上班打卡</a>
-            <a class="btn btn-primary" href="/endWork">下班打卡</a>
-            <a class="btn btn-primary" href="/leavePermission">請假</a>
-            <a class="btn btn-primary" href="/personalInformation">我的個資</a>
+            <a class="btn btn-primary" href="/start_work">上班打卡</a>
+            <a class="btn btn-primary" href="/end_work">下班打卡</a>
+            <a class="btn btn-primary" href="/leave_permission">請假</a>
+            <a class="btn btn-primary" href="/personal_information">我的個資</a>
         </div>
         <div>
-            <a class="btn btn-primary" href="/companyInformation">公司資料</a>
+            <a class="btn btn-primary" href="/company_information">公司資料</a>
             <a class="btn btn-primary" href="/attendance">出席資料</a>
             <a class="btn btn-primary" href="/report">統計報表</a>
         </div>
     </section>
     <script>
         const logout = document.querySelector('#sign-out');
+        const referesh = document.querySelector("#refresh")
         logout.addEventListener('click', (e) => {
             e.preventDefault();
             firebase.auth().signOut();
-            submitData("");
+            submitData("", "you have logged out");
+        })
+        referesh.addEventListener('click', (e)=> {
+            e.preventDefault()
+            const user = firebase.auth().currentUser;
+            submitData(user.uid, "refreshed");
         })
 
-        function submitData(id) {
+        function submitData(id, message) {
         const requestUrl = '/';
         let data = {
             id: id,
@@ -117,12 +126,12 @@
         contentType: "application/json;charset=utf-8",
 
         success: function () {
-            alert('you have logged out');
+            alert(message);
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.log(xhr.status);
             console.log(thrownError);
-            alert('Failed to logout');
+            alert('operation failed');
         },
         });
     }
