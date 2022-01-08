@@ -43,9 +43,7 @@
           <th>ID</th>
           <th>Name</th>
           <th>Role</th>
-          {% if role == 'manager' %}
           <th>Salary</th>
-          {% endif %}
         </tr>
       </thead>
       <tbody id="memberTable">
@@ -54,9 +52,7 @@
             <th>{{company['id']}}</th>
             <th>{{company['name']}}</th>
             <th>{{company['role']}}</th>
-            {% if role == 'manager' %}
             <th>{{company['salary']}}</th>
-            {% endif %}
           </tr>
           {% endfor %}
       </tbody>

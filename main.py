@@ -88,9 +88,28 @@ def register():
 #  ------------------------------------------------------------------------------------------ 
    
 # Start Work 
-@app.route("/start_work/<memberId>", methods=['GET', "POST"])
+@app.route("/start_work/", methods=['GET', "POST"])
 def start_work(memberId):
-    return render_template('startWork.html', member_id=memberId)
+    memberId = request.get_json(force=True)['id']
+    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
+    if member:
+        user['is_logged_in'] = True
+        user['id'] = member['id']
+        user['role'] = member['role']
+        app.logger.info(user)
+        
+        if user['role'] == 'worker' or user['role'] == 'manager':
+            return render_template('startWork.html', member_id=user['id'])
+        else:
+            message = '401 Unauthorized, Access Denied'
+            return redirect(url_for('error', message=message))
+  
+    else:
+        user['is_logged_in'] = False
+        user['id'] = ""
+        user['role'] = ""
+        message = 'You are not logged in'
+        return redirect(url_for('error', message=message))
 
 @app.route("/submit/start", methods=['POST'])
 def submit_start_work():
@@ -116,9 +135,28 @@ def submit_start_work():
 #  ------------------------------------------------------------------------------------------ 
   
 # End Work 
-@app.route("/end_work/<memberId>", methods=['GET', 'POST'])
+@app.route("/end_work/", methods=['GET', 'POST'])
 def end_work(memberId):
-    return render_template('endWork.html', member_id=memberId)
+    memberId = request.get_json(force=True)['id']
+    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
+    if member:
+        user['is_logged_in'] = True
+        user['id'] = member['id']
+        user['role'] = member['role']
+        app.logger.info(user)
+        
+        if user['role'] == 'worker' or user['role'] == 'manager':
+            return render_template('endWork.html', member_id=user['id'])
+        else:
+            message = '401 Unauthorized, Access Denied'
+            return redirect(url_for('error', message=message))
+  
+    else:
+        user['is_logged_in'] = False
+        user['id'] = ""
+        user['role'] = ""
+        message = 'You are not logged in'
+        return redirect(url_for('error', message=message))
 
 @app.route("/submit/end", methods=['POST'])
 def submit_end_work():
@@ -145,9 +183,28 @@ def submit_end_work():
 #  ------------------------------------------------------------------------------------------ 
  
 # Leave Permission 
-@app.route("/leave_permission/<memberId>", methods=['GET', 'POST'])
+@app.route("/leave_permission/", methods=['GET', 'POST'])
 def leave_permission(memberId):
-    return render_template('leavePermission.html', member_id=memberId)
+    memberId = request.get_json(force=True)['id']
+    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
+    if member:
+        user['is_logged_in'] = True
+        user['id'] = member['id']
+        user['role'] = member['role']
+        app.logger.info(user)
+        
+        if user['role'] == 'worker' or user['role'] == 'manager':
+            return render_template('leavePermission.html', member_id=user['id'])
+        else:
+            message = '401 Unauthorized, Access Denied'
+            return redirect(url_for('error', message=message))
+  
+    else:
+        user['is_logged_in'] = False
+        user['id'] = ""
+        user['role'] = ""
+        message = 'You are not logged in'
+        return redirect(url_for('error', message=message))
 
 @app.route("/submit/leave", methods=['POST'])
 def submit_leave_permission():
@@ -158,7 +215,7 @@ def submit_leave_permission():
 #  ------------------------------------------------------------------------------------------ 
   
 # Attendance 
-@app.route("/attendance/<memberId>", methods=['GET'])
+@app.route("/attendance/", methods=['GET'])
 def attendance(memberId):
     beginOfWork, endOfWork, dayOff = firestoreDAO.getAttendenceRecords(memberId)
     app.logger.info(f"{beginOfWork}, {endOfWork}, {dayOff}")
@@ -190,18 +247,55 @@ def attendance(memberId):
                 "latitude": end['latitude'],
             }    
         )
-    return render_template('attendance.html', starts=starts, ends=ends, leaves=dayOff)
+
+    memberId = request.get_json(force=True)['id']
+    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
+    
+    if member:
+        user['is_logged_in'] = True
+        user['id'] = member['id']
+        user['role'] = member['role']
+        app.logger.info(user)
+        
+        if user['role'] == 'worker' or user['role'] == 'manager':
+            render_template('attendance.html', starts=starts, ends=ends, leaves=dayOff)
+        else:
+            message = '401 Unauthorized, Access Denied'
+            return redirect(url_for('error', message=message))
+  
+    else:
+        user['is_logged_in'] = False
+        user['id'] = ""
+        user['role'] = ""
+        message = 'You are not logged in'
+        return redirect(url_for('error', message=message))
 
 #  ------------------------------------------------------------------------------------------ 
 
 # Personal Information 
-@app.route("/personal_information/<memberId>", methods=['GET', 'POST'])
+@app.route("/personal_information/", methods=['GET', 'POST'])
 def personal_information(memberId):
+    memberId = request.get_json(force=True)['id']
     member = firestoreDAO.getMember({'companyId': companyId}, memberId)
-    return render_template('personalInformation.html', member=member)
+    
+    if member:
+        user['is_logged_in'] = True
+        user['id'] = member['id']
+        user['role'] = member['role']
+        app.logger.info(user)
+        return render_template('personalInformation.html', member=member)
+    else:
+        user['is_logged_in'] = False
+        user['id'] = ""
+        user['role'] = ""
+        message = 'You are not logged in'
+        return redirect(url_for('error', message=message))
+    
+    
 
-@app.route("/edit/<memberId>", methods=['GET', 'POST'])
+@app.route("/edit/", methods=['GET', 'POST'])
 def edit_user_data(memberId):
+    memberId = request.get_json(force=True)['id']
     member = firestoreDAO.getMember({'companyId': companyId}, memberId)
     return render_template('edit.html', member=member)
 
@@ -215,20 +309,60 @@ def save_user_data():
 #  ------------------------------------------------------------------------------------------ 
   
 # Company Information    
-@app.route("/company_information/<memberId>", methods=['GET'])
+@app.route("/company_information/", methods=['GET'])
 def company_information(memberId):
+    memberId = request.get_json(force=True)['id']
     members = firestoreDAO.getMembers({'companyId': companyId})
     member = firestoreDAO.getMember({'companyId': companyId}, memberId)
-    role = member['role'] if member is not None else None
-    return render_template('companyInformation.html', companies=members, role=role)
+    
+    if member:
+        user['is_logged_in'] = True
+        user['id'] = member['id']
+        user['role'] = member['role']
+        app.logger.info(user)
+        
+        if user['role'] == 'admin':
+            return render_template('companyInformation.html', companies=members)
+        else:
+            message = '401 Unauthorized, Access Denied'
+            return redirect(url_for('error', message=message))
+
+    else:
+        user['is_logged_in'] = False
+        user['id'] = ""
+        user['role'] = ""
+        message = 'You are not logged in'
+        return redirect(url_for('error', message=message))
+    # return render_template('companyInformation.html', companies=members, role=role)
 
 #  ------------------------------------------------------------------------------------------ 
 
 # Report 
-@app.route("/report/<memberId>", methods=['GET'])
+@app.route("/report/", methods=['GET'])
 def report(memberId):
-    member_id = memberId
-    return render_template('report.html')
+    memberId = request.get_json(force=True)['id']
+    member = firestoreDAO.getMember({'companyId': companyId}, memberId)
+    
+    if member:
+        user['is_logged_in'] = True
+        user['id'] = member['id']
+        user['role'] = member['role']
+        app.logger.info(user)
+        
+        if user['role'] == 'manager' or user['role'] == 'admin':
+            manager_report_url = ''
+            return render_template('report.html', report_url=manager_report_url)
+        if user['role'] == 'worker':
+            worker_report_url = ''
+            return render_template('report.html', report_url=worker_report_url)
+
+    else:
+        user['is_logged_in'] = False
+        user['id'] = ""
+        user['role'] = ""
+        message = 'You are not logged in'
+        return redirect(url_for('error', message=message))
+    # return render_template('report.html')
 
 #  ------------------------------------------------------------------------------------------ 
 
