@@ -58,7 +58,14 @@
                 const uid = user.uid;
                 const lineId = document.getElementById("lineId").value;
                 const name = document.getElementById("user-name").value;
-
+                db.collection('members').doc(uid).set({
+                    id: uid,
+                    lineId: lineId,
+                    name: name,
+                    email: email,
+                    salary: 180,
+                    role: 'worker'
+                })
                 console.log(user);
                 // ...
             })
