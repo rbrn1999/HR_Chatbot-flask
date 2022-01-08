@@ -294,12 +294,12 @@ def report():
 
     if user['is_logged_in']:
 
-        if user['role'] == 'manager' or user['role'] == 'admin' or user['role'] == 'worker':
+        if user['role'] == 'manager' or user['role'] == 'admin':
             manager_report_url = 'https://datastudio.google.com/embed/reporting/d2c6b151-2e88-4e72-ab92-3a9b842001a4/page/p_veujwqbxqc'
             return render_template('report.html', report_url=manager_report_url)
-        # if user['role'] == 'worker':
-        #     worker_report_url = ''
-        #     return render_template('report.html', report_url=worker_report_url)
+        if user['role'] == 'worker':
+            worker_report_url = 'https://datastudio.google.com/embed/reporting/98f85ab9-0731-4804-a175-c690dd788efc/page/p_veujwqbxqc'
+            return render_template('report.html', report_url=worker_report_url)
 
     else:
         user['is_logged_in'] = False
