@@ -13,10 +13,28 @@ app = Flask(__name__)
 
 firestoreDAO = FirestoreDAO(logger=app.logger)
 
+user = {"is_logged_in": False, "id": "", "role": ""}
+
 # Index
-@app.route("/", methods=['GET'])
+@app.route("/", methods=['GET', 'POST'])
 def index():
-    return render_template("index.html", liffId = liffId)
+    if request.method == 'GET':
+        app.logger.info(user)
+        return render_template("index.html", liffId = liffId)
+    if request.method == 'POST':
+        memberId = request.get_json(force=True)['id']
+        app.logger.info(memberId)
+        member = firestoreDAO.getMember({'companyId': companyId}, memberId)
+        if member:
+            user['is_logged_in'] = True
+            user['id'] = member['id']
+            user['role'] = member['role']
+            app.logger.info(user)
+        else:
+            user['is_logged_in'] = False
+            user['id'] = ""
+            user['role'] = ""
+        return render_template("index.html", liffId = liffId)
 
 #  ------------------------------------------------------------------------------------------ 
 
@@ -59,7 +77,7 @@ def binding():
 @app.route("/register/", methods=['POST'])
 def register():
     memberData = request.get_json(force=True)
-    member = firestoreDAO.setMember(memberData)
+    member = firestoreDAO.addMember(memberData)
     # if "setMember" in member.keys():
     #     # - pubsub
     #     member["companyName"] = firestoreDAO.getCompanies({'companyId': companyId})[0]['name']

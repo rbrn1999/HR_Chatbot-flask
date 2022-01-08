@@ -3,7 +3,7 @@
 {% block bodyContent %}
 <h1 class="title">登入</h1>
 
-<form action="" method="POST">
+<form action="" method="POST" onsubmit="return false">
     <label class="label">
         <div class="field form-inline">
             email: <input type="text" class="label" name="email" id="email" class="input" required="required" />
@@ -47,6 +47,7 @@
                 // Signed in 
                 var user = userCredential.user;
                 console.log(user);
+                submitData(user.uid)
                 // ...
             })
             .catch((error) => {
@@ -56,6 +57,28 @@
                 // ..
             })
     });
+    function submitData(id) {
+        const requestUrl = '/';
+        let data = {
+            id: id,
+        };
+
+        $.ajax({
+        url: requestUrl,
+        data: JSON.stringify(data),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+
+        success: function () {
+            alert('login info saved');
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr.status);
+            console.log(thrownError);
+            alert('Failed to login');
+        },
+        });
+    }
 </script>
 
 {% endblock %}

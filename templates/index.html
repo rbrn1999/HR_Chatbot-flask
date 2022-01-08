@@ -36,13 +36,13 @@
         // Initialize Firebase
         const firebaseApp = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const db = firebase.firestore();
+        // const db = firebase.firestore();
   
-        db.settings( {timestampsInsanpshots: true} );
+        // db.settings( {timestampsInsanpshots: true} );
         
-        db.collection('members').get().then(snapshot => {
-            console.log(snapshot.docs);
-        })
+        // db.collection('members').get().then(snapshot => {
+        //     console.log(snapshot.docs);
+        // })
 
         auth.onAuthStateChanged(user => {
           if (user) {
@@ -101,7 +101,31 @@
         logout.addEventListener('click', (e) => {
             e.preventDefault();
             firebase.auth().signOut();
+            submitData("");
         })
+
+        function submitData(id) {
+        const requestUrl = '/';
+        let data = {
+            id: id,
+        };
+
+        $.ajax({
+        url: requestUrl,
+        data: JSON.stringify(data),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+
+        success: function () {
+            alert('you have logged out');
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr.status);
+            console.log(thrownError);
+            alert('Failed to logout');
+        },
+        });
+    }
     </script>
 </body>
 </html>

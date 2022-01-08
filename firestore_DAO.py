@@ -55,7 +55,36 @@ class FirestoreDAO:
             "salary": myMember['salary'],
             "setMember": True
         }
+    def addMember(self, myMember, role='worker', salary=180): # with firebase uid
+        myMember['role'] = role
+        myMember['salary'] = salary
+        memberCollection = self.__db.collection("members")
+        memberList = list(doc._data for doc in memberCollection.stream())
+        for member in memberList:
+            if member["lineId"] == myMember['lineId']:
+                # check company has member
+                for docs in self.__db.collection(f"companies/{companyId}/members").stream():
+                    if docs.id == member['id']:
+                        return member
 
+                # create memberid in company
+                self.__db.document(f"companies/{companyId}/members/{member['id']}").set(None)
+                member["setMember"] = True
+                return member
+
+        # create member
+        memberId = myMember['id']
+        memberCollection.document(memberId).set(myMember)
+
+        # create member in company
+        self.__db.document(f"companies/{companyId}/members/{memberId}").set(None)
+        return {
+            "name": myMember['name'],
+            "lineId": myMember['lineId'],
+            "id": myMember['id'],
+            "salary": myMember['salary'],
+            "setMember": True
+        }
     def updateMember(self, member):
         doc_ref = self.__db.document(f"members/{member['id']}")
         if doc_ref.get().exists:
@@ -83,6 +112,7 @@ class FirestoreDAO:
     def getMember(self, company, memberId):
         members = self.getMembers(company)
         for member in members:
+            self.logger.info(f"{member['id']} vs {memberId}")
             if member['id'] == memberId:
                 return member
         self.logger.info("ID NOT FOUND")
