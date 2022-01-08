@@ -58,16 +58,9 @@
                 const uid = user.uid;
                 const lineId = document.getElementById("lineId").value;
                 const name = document.getElementById("user-name").value;
-                db.collection('members').doc(uid).set({
-                    id: uid,
-                    lineId: lineId,
-                    name: name,
-                    email: email,
-                    salary: 180,
-                    role: 'worker'
-                })
                 console.log(user);
                 // ...
+                submitData(uid, lineId, name, email);
             })
             .catch((error) => {
                 var errorCode = error.code;
@@ -76,6 +69,31 @@
                 // ..
             })
     });
+    function submitData(id, lineId, name, email) {
+        const requestUrl = '/register/';
+        let data = {
+            id: id,
+            lineId: lineId,
+            name: name,
+            email: email
+        };
+
+        $.ajax({
+        url: requestUrl,
+        data: JSON.stringify(data),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+
+        success: function () {
+            alert('signup info saved');
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr.status);
+            console.log(thrownError);
+            alert('Failed to signup');
+        },
+        });
+    }
 </script>
 
 {% endblock %}
