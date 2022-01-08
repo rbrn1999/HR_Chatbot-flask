@@ -32,7 +32,18 @@ def signUp():
             return render_template("error.html", message="註冊失敗") 
 
 #  ------------------------------------------------------------------------------------------ 
+# Login
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template("login.html",liffId = liffId)
+    if request.method == 'POST':
+        try:
+            return render_template("success.html", message="登入成功")
+        except:
+            return render_template("error.html", message="登入失敗") 
 
+#  ------------------------------------------------------------------------------------------ 
 # Binding 
 @app.route("/binding", methods=['GET', 'POST'])
 def binding():

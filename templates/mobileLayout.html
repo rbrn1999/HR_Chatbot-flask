@@ -17,13 +17,51 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    
+    <script>
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyCW1dbre1zFXoiDDD6kXQoFj9ggIYoXuzw",
+        authDomain: "chatbot-termproject.firebaseapp.com",
+        projectId: "chatbot-termproject",
+        storageBucket: "chatbot-termproject.appspot.com",
+        messagingSenderId: "223097216715",
+        appId: "1:223097216715:web:eaa4227d134cb9bff2c54e",
+      };
+
+      // Initialize Firebase
+      const firebaseApp = firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+
+      
+
+      db.settings( {merge: true} );
+
+      // db.collection('members').get().then(snapshot => {
+      //       console.log(snapshot.docs);
+      // })
+
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          console.log('user logged in:', user);
+        } else {
+          console.log('user logged out');
+        }
+      })
+    </script>
+
     <form method="POST">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <title>{% block title %}{% endblock %}</title>
       {% block headContent %}{% endblock %}
     </form>
     <style>
-      html, body {
+      html,
+      body {
         margin: 0px;
         padding: 0px;
         background-color: #d8d8d8 !important;

@@ -1,24 +1,18 @@
 {% extends "mobileLayout.html" %}
-{% block title %}註冊{% endblock %}
+{% block title %}登入{% endblock %}
 {% block bodyContent %}
-<h1 class="title">註冊</h1>
+<h1 class="title">登入</h1>
+
 <form action="" method="POST" onsubmit="return false">
     <label class="label">
-        <div class="field form-inline">
-            姓名:&ensp;<input type="text" class="label" name="name" id="user-name" class="input" required="required" />
-        </div>
         <div class="field form-inline">
             email: <input type="text" class="label" name="email" id="email" class="input" required="required" />
         </div>
         <div class="field form-inline">
             密碼:&ensp;<input type="password" class="label" name="password" id="password" class="input" required="required" />
         </div>
-        <div class="field form-inline">     
-            Line ID: <input type="text" name="lineId" id='lineId' class="input" value="place-holder" required="required" readonly/>
-        </div>
-
         <div class="field form-inline">
-            <button class="button is-link" id="submit-button">註冊</button>
+            <button class="button is-link" id="submit-button">登入</button>
         </div>
     </label>
 </form>
@@ -44,21 +38,14 @@
         .catch((err) => {
             console.log(err.code, err.message);
         });
-    // document.user = null; for debug
+
     document.getElementById("submit-button").addEventListener("click", (e) => {
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
-        auth.createUserWithEmailAndPassword(email, password)
+        firebase.auth().signInWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 // Signed in 
                 var user = userCredential.user;
-                // document.user = user; for debug
-
-                // add member info to db
-                const uid = user.uid;
-                const lineId = document.getElementById("lineId").value;
-                const name = document.getElementById("user-name").value;
-
                 console.log(user);
                 // ...
             })

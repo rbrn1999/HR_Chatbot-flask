@@ -17,6 +17,41 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+    <script type="module">
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyCW1dbre1zFXoiDDD6kXQoFj9ggIYoXuzw",
+          authDomain: "chatbot-termproject.firebaseapp.com",
+          projectId: "chatbot-termproject",
+          storageBucket: "chatbot-termproject.appspot.com",
+          messagingSenderId: "223097216715",
+          appId: "1:223097216715:web:eaa4227d134cb9bff2c54e",
+        };
+  
+        // Initialize Firebase
+        const firebaseApp = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+  
+        db.settings( {timestampsInsanpshots: true} );
+        
+        db.collection('members').get().then(snapshot => {
+            console.log(snapshot.docs);
+        })
+
+        auth.onAuthStateChanged(user => {
+          if (user) {
+            console.log('user logged in:', user);
+          } else {
+            console.log('user logged out');
+          }
+        })
+      </script>
 </head>
 <body>
     <script>
@@ -39,7 +74,7 @@
                     <a class="nav-link" href="/login">會員登入</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/binding">會員綁定</a>
+                    <a class="nav-link" id="sign-out">會員登出</a>
                 </li>
             </ul>
         </div>
@@ -61,6 +96,12 @@
             <a class="btn btn-primary" href="/report">統計報表</a>
         </div>
     </section>
-
+    <script>
+        const logout = document.querySelector('#sign-out');
+        logout.addEventListener('click', (e) => {
+            e.preventDefault();
+            firebase.auth().signOut();
+        })
+    </script>
 </body>
 </html>
